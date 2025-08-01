@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Фев 10 2025 г., 16:02
--- Версия сервера: 8.0.30
--- Версия PHP: 8.0.22
+-- Время создания: Авг 01 2025 г., 22:15
+-- Версия сервера: 10.3.13-MariaDB
+-- Версия PHP: 7.1.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -28,10 +29,10 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `basket` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `product_id` varchar(100) DEFAULT NULL,
   `user_id` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `basket`
@@ -47,10 +48,10 @@ INSERT INTO `basket` (`id`, `product_id`, `user_id`) VALUES
 --
 
 CREATE TABLE `favourites` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `product_id` varchar(100) DEFAULT NULL,
   `user_id` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `favourites`
@@ -68,9 +69,9 @@ INSERT INTO `favourites` (`id`, `product_id`, `user_id`) VALUES
 --
 
 CREATE TABLE `products` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `title` varchar(100) DEFAULT NULL,
-  `descr` text,
+  `descr` text DEFAULT NULL,
   `price` double DEFAULT NULL,
   `category` varchar(100) DEFAULT NULL,
   `files` varchar(100) DEFAULT NULL,
@@ -80,7 +81,7 @@ CREATE TABLE `products` (
   `files_3` varchar(100) DEFAULT NULL,
   `files_4` varchar(100) DEFAULT NULL,
   `files_5` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `products`
@@ -101,22 +102,43 @@ INSERT INTO `products` (`id`, `title`, `descr`, `price`, `category`, `files`, `c
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `sliders`
+--
+
+CREATE TABLE `sliders` (
+  `id` int(11) NOT NULL,
+  `imageslider` varchar(250) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `sliders`
+--
+
+INSERT INTO `sliders` (`id`, `imageslider`) VALUES
+(1, '688d00234b2244.92775022.jpg'),
+(2, '688d0329010dc8.26739713.jpg'),
+(3, '688d032e448427.16128786.jpg');
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `user`
 --
 
 CREATE TABLE `user` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `login` varchar(100) DEFAULT NULL,
-  `password` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `password` varchar(100) DEFAULT NULL,
+  `role` varchar(250) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `user`
 --
 
-INSERT INTO `user` (`id`, `login`, `password`) VALUES
-(1, 'qw', 'qw'),
-(3, 'as', 'as');
+INSERT INTO `user` (`id`, `login`, `password`, `role`) VALUES
+(1, 'qw', 'qw', ''),
+(3, 'as', 'as', '');
 
 --
 -- Индексы сохранённых таблиц
@@ -141,6 +163,12 @@ ALTER TABLE `products`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Индексы таблицы `sliders`
+--
+ALTER TABLE `sliders`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Индексы таблицы `user`
 --
 ALTER TABLE `user`
@@ -154,25 +182,31 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT для таблицы `basket`
 --
 ALTER TABLE `basket`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT для таблицы `favourites`
 --
 ALTER TABLE `favourites`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT для таблицы `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+
+--
+-- AUTO_INCREMENT для таблицы `sliders`
+--
+ALTER TABLE `sliders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
