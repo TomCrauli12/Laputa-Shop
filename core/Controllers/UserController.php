@@ -6,22 +6,24 @@ if($_GET['action']=="register"){
     
     $login = $_POST['login'];
 
-    $password = $_POST['password'];
+    $name = $_POST['name'];
 
-    UserModel::register($login, $password);
+    $password = md5($_POST['password']);
 
-    Header('Location: ../login.php');
+    $role = "user";
+
+    UserModel::register($login, $name, $password, $role);
+
+    header("Location: ../../pages/identification.php");
 
 }
 elseif($_GET['action']=="login"){
 
     $login = $_POST['login'];
 
-    $password = $_POST['password'];
+    $password = md5($_POST['password']);
 
-    UserModel::login($login,$password);
-
-    Header("Location: /");
+    UserModel::login($login, $password);
 
 }
 elseif($_GET['action']=="logout"){

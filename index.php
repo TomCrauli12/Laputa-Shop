@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once __DIR__ . './DB/start.php';
 require_once __DIR__ . './core/Modules/UserModel.php';
 require_once __DIR__ . './core/Modules/PostModel.php';
@@ -18,8 +20,6 @@ $sliders = $query->fetchAll();
 
 
 
-
-session_start();
 ?>
 
 
@@ -214,6 +214,13 @@ session_start();
                             </div>
                         <?php endif; ?>
                     </div>
+                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] == "admin"): ?>
+                        <div class="admin_buttons">
+                            <a href="./core/Controllers/PostController.php?action=editProduct&id=<?=$key['id']?>" class="edit_btn">Редактировать</a>
+                            <a href="./core/Controllers/PostController.php?action=deleteProduct&id=<?=$key['id']?>" class="delete_btn" onclick="return confirm('Вы уверены, что хотите удалить этот товар?')">Удалить</a>
+                        </div>
+                    <?php endif; ?>
+                    </div>
                 </div>
                 <?php $count++; ?>
                 <?php endif; ?>
@@ -256,6 +263,12 @@ session_start();
                             </div>
                         <?php endif; ?>
                     </div>
+                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] == "admin"): ?>
+                        <div class="admin_buttons">
+                            <a href="./core/Controllers/PostController.php?action=editProduct&id=<?=$key['id']?>" class="edit_btn">Редактировать</a>
+                            <a href="./core/Controllers/PostController.php?action=deleteProduct&id=<?=$key['id']?>" class="delete_btn" onclick="return confirm('Вы уверены, что хотите удалить этот товар?')">Удалить</a>
+                        </div>
+                    <?php endif; ?>
                 </div>
                 <?php $count++; ?>
                 <?php endif; ?>
@@ -298,6 +311,12 @@ session_start();
                             </div>
                         <?php endif; ?>
                     </div>
+                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] == "admin"): ?>
+                        <div class="admin_buttons">
+                            <a href="./core/Controllers/PostController.php?action=editProduct&id=<?=$key['id']?>" class="edit_btn">Редактировать</a>
+                            <a href="./core/Controllers/PostController.php?action=deleteProduct&id=<?=$key['id']?>" class="delete_btn" onclick="return confirm('Вы уверены, что хотите удалить этот товар?')">Удалить</a>
+                        </div>
+                    <?php endif; ?>
                 </div>
                 <?php $count++; ?>
                 <?php endif; ?>
@@ -340,6 +359,12 @@ session_start();
                             </div>
                         <?php endif; ?>
                     </div>
+                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] == "admin"): ?>
+                        <div class="admin_buttons">
+                            <a href="./core/Controllers/PostController.php?action=editProduct&id=<?=$key['id']?>" class="edit_btn">Редактировать</a>
+                            <a href="./core/Controllers/PostController.php?action=deleteProduct&id=<?=$key['id']?>" class="delete_btn" onclick="return confirm('Вы уверены, что хотите удалить этот товар?')">Удалить</a>
+                        </div>
+                    <?php endif; ?>
                 </div>
                 <?php $count++; ?>
                 <?php endif; ?>

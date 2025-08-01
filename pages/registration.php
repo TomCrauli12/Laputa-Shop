@@ -15,7 +15,10 @@ require_once '../DB/start.php';
         <h3>Регистрация</h3>
 
         <label>Логин</label>
-        <input type="text" name="login" required="" placeholder="Ваш логин">
+        <input type="text" name="login" required="" placeholder="Логин">
+
+        <label>Имя пользователя</label>
+        <input type="text" name="name" required="" placeholder="Имя пользователя">
 
         <label>Пароль</label>
         <input type="password" name="password" required=""placeholder="Пароль">

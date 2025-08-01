@@ -3,52 +3,62 @@ require_once __DIR__ . '/../../DB/start.php';
 
 class UserModel{
 
-    static function register($login,$password){
+    static function register($login, $name, $password, $role) {
+        $conn = DB::getConnection();
 
-    $conn = DB::getConnection();
-        
-    $query = $conn->prepare("INSERT INTO user (login,password) values (?,?)");
+        $query = $conn->prepare("SELECT * FROM `users` WHERE `login` = :login");
+        $query->execute(['login' => $_POST['login']]);
+        if ($query->rowCount() > 0) {
+            $_SESSION['error_message'] = 'Это логин уже занят.';
+            header('Location: ../../pages/register.php'); 
+            die; 
+        }
 
-    $query->execute([$login,$password,]);
+        $query = $conn->prepare("SELECT * FROM `users` WHERE `name` = :name");
+        $query->execute(['name' => $_POST['name']]);
+        if ($query->rowCount() > 0) {
+            $_SESSION['error_message'] = 'Это имя пользователя уже занято.';
+            header('Location: ../../pages/register.php'); 
+            die; 
+        }
 
+        $query = $conn->prepare("INSERT INTO users (login, name, password, role) values (?, ?, ?, ?)");
+        $query->execute([$login, $name, $password, $role]);
 
     }
 
-    static function login($login,$password){
 
-    $conn = DB::getConnection();
-        
-    $query = $conn->prepare("SELECT * FROM `user` WHERE `login` = ? and `password` = ?");
-
-    $query->execute([$login, $password]);
-    
-    $userinfo = $query->fetch();
-
-    if ($query->rowCount()>0){
-
+    static function login($login, $password) {
         session_start();
+        $conn = DB::getConnection();
 
-        $_SESSION['login'] = $userinfo['login'];
-        $_SESSION['id'] = $userinfo['id'];
+        $query = $conn->prepare('SELECT * FROM `users` WHERE `login` = ? AND `password` = ?');
+        $query->execute([$login, $password]);
 
+        $userinfo = $query->fetch();
 
-        echo "<script type='text/javascript'> alert('Авторизация успешна!'); window.location.href='../index.php' </script> ";
+        if ($query->rowCount() > 0) {
 
-    }
+            $_SESSION['login'] = $userinfo['login'];
+            $_SESSION['id'] = $userinfo['id'];
+            $_SESSION['role'] = $userinfo['role'];
+            $_SESSION['name'] = $userinfo['name'];
 
-    else{
+            header('Location: ../../index.php');
+            exit();
+        } else {
 
-        echo "<script type='text/javascript'> alert('Ошибка авторизации'); window.location.href='../login.php' </script> ";
-
-    }
-
+            $_SESSION['error'] = 'Ошибка авторизации';
+            header('Location: ../../pages/login.php');
+            exit();
+        }
     }
 
     static function getUserInfo($userid){
 
         $conn = DB::getConnection();
 
-        $query = $conn->prepare("select * from user where id = ?");
+        $query = $conn->prepare("select * from users where id = ?");
 
         $query->execute([$userid]);
 
