@@ -1,0 +1,392 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+a{
+    color: black;
+    text-decoration: none;
+}
+p{
+    color: black;
+}
+h1,h2,h3,h4,h5{
+    color: black;
+}
+
+html,
+body {
+	height: 100%;
+}
+
+
+
+
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0px;
+    background-color: rgba(168, 168, 168, 0.274);
+    padding: 8px 100px;
+}
+.nav>a{
+    padding: 0px 5px;
+}
+.contact>a>img{
+    width: 40px;
+}
+
+
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(168, 168, 168, 0.274);
+    padding: 8px 100px;
+}
+.header_left{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.catalog{
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    background-color: brown;
+    border-radius: 10px;
+}
+
+
+form {
+    width: 100%;
+    margin:auto;
+    border: #000000 1px solid;
+    padding: 2px;
+    border-radius: 5px;
+    }
+input{
+    padding:4px 10px;
+    border:0;
+    font-size:16px;
+    }
+.search {
+    width: 70%;
+    }
+.submit{
+    width: 20%;
+    background-color: #dd1414;
+    border-radius: 5px;
+    }
+
+.header_right{
+    display: flex;
+}
+.nav_item{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 20px;
+}
+.nav_item>a>img{
+    width: 40px;
+}
+
+
+
+
+/* Слайдер---------------------------------------- */
+.slider {
+    position: relative;
+    padding: 0px 100px;
+    height: 500px;
+    margin: 10px auto;
+}
+
+.slides {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+.slide.active {
+    display: block;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.controls {
+    display: none;
+}
+
+.dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ccc;
+    border: none;
+    cursor: pointer;
+}
+
+.dot.active {
+    background-color: #333;
+}
+
+
+.burger-checkbox {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .burger-checkbox input[type="checkbox"] {
+    display: none;
+  }
+  
+  .burger-checkbox label {
+    cursor: pointer;
+    display: inline-block;
+    width: 30px;
+    height: 20px;
+    position: relative;
+  }
+  
+  .burger-checkbox label .burger {
+    position: relative;
+    display: inline-block;
+    width: 25px;
+    height: 2px;
+    background-color: #ff9999;
+    border-radius: 2px;
+    transition: transform 0.3s;
+  }
+  
+  .burger-checkbox label .burger:before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 0;
+    width: 25px;
+    height: 2px;
+    background-color: #ff9999;
+    border-radius: 2px;
+    transition: transform 0.3s;
+  }
+  
+  .burger-checkbox label .burger:after {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 0;
+    width: 25px;
+    height: 2px;
+    background-color: #ff9999;
+    border-radius: 2px;
+    transition: transform 0.3s;
+  }
+  
+  .burger-checkbox input[type="checkbox"]:checked + label .burger {
+    transform: rotate(39deg);
+  }
+  
+  .burger-checkbox input[type="checkbox"]:checked + label .burger:before {
+    transform: rotate(-76deg);
+    top: 0;
+  }
+  
+  .burger-checkbox input[type="checkbox"]:checked + label .burger:after {
+    transform: rotate(-76deg);
+    top: 0;
+  }
+  
+  .info-block {
+    display: none;
+    position: fixed;
+    top: 58%;
+    left: 22%;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 80%);
+    height: 80%;
+    background-color: #ff0000;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 20px;
+    overflow-y: auto;
+    border-radius: 15px;
+  }
+  
+  .burger-checkbox input[type="checkbox"]:checked ~ .info-block {
+    display: flex;
+  }
+
+.categories{
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    height: 100%;
+}
+
+.categories>a{
+    font-size: 22px;
+    padding: 5px 10px;
+}
+
+
+.conteiner{
+    border: #dd1414 2px solid;
+    border-radius: 10px;
+}
+.conteiner>h1{
+    display: flex;
+    justify-content: center;
+}
+
+.product_grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(310px, auto));
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+}
+.new_product{
+    padding: 0px 100px;
+    margin: 30px 0px;
+}
+.discond{
+  padding: 0px 100px;
+  margin: 30px 0px;
+}
+.Pre_orders{
+  padding: 0px 100px;
+  margin: 30px 0px;
+}
+.Sale{
+  padding: 0px 100px;
+  margin: 30px 0px;
+}
+.card {
+    width: 270px;
+    height: 380px;
+    margin: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+  }
+  
+  .card img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 10px 10px 0px 0px;
+  }
+  
+  .price h1 {
+    font-size: 20px;
+  }
+  .price{
+    margin: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .button{
+    /* margin: 10px; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .card p {
+    font-size: 15px;
+  }
+  .bascet{
+    display: flex;
+    justify-content: center;
+    background-color: #dd1414;
+    border-radius: 5px;
+    padding: 5px 10px;
+    width: 75%;
+  }
+  .bascet>a{
+    font-size: 1vw;
+  }
+  .like{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25%;
+  }
+  .like img{
+    width: 25px;
+    height: 25px;
+  }
+
+.section_name{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+
+.sean{
+  width: 50%;
+}
+
+.search {
+  width: 100%;
+  height: 40px;
+  background: #444;
+  background: rgba(0,0,0,.2);
+  border-radius:  50px;
+  border: 1px solid #fff;
+  
+  input {
+    width: 80%;
+    padding: 10px 5px;
+    float: left;
+    color: #000000;
+    border: 0;
+    background: transparent;
+    border-radius: 3px 0 0 3px;
+    &:focus {
+      outline: 0;
+      background:transparent;
+    }
+  }
+  
+button {
+  position: relative;
+  float: right;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  height: 40px;
+  width: 20%;
+  color: #fff;
+  background: transparent;
+  border-left: 1px solid #fff;
+  border-radius: 0 3px 3px 0;
+}  
+}
