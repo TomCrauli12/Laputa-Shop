@@ -1,12 +1,7 @@
-<!-- таблицы
-товар
-id название описание изображения теги категория -->
-<!-- таблица user
-login password role -->
 <?php
-require_once './DB/start.php';
-require_once './core/Modules/UserModel.php';
-require_once './core/Modules/PostModel.php';
+require_once __DIR__ . './DB/start.php';
+require_once __DIR__ . './core/Modules/UserModel.php';
+require_once __DIR__ . './core/Modules/PostModel.php';
 
 $conn = DB::getConnection();
 
@@ -17,6 +12,9 @@ $discounts = PostModel::getInfoBlock("Скидки");
 $pre_orders = PostModel::getInfoBlock("Предзаказы");
 
 $sale = PostModel::getInfoBlock("Распродажа");
+
+$query = $conn->query('select * from sliders');
+$sliders = $query->fetchAll();
 
 
 
@@ -33,6 +31,7 @@ session_start();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="color-scheme" content="light dark">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style/style.css">
     <link rel="stylesheet" href="./style/medea.css">
@@ -47,8 +46,20 @@ session_start();
             <a href="./pages/about.html">О нас</a>
             <a href="./pages/contact.html">Контакты</a>
             <a href="./pages/create_product.html">Добавить товар</a>
+            <a href="./pages/addToSlider.php">Добавить слайдер</a>
         </div>
         <div class="contact">
+            <div class="theme-switcher">
+                <label for="theme-toggle-checkbox" class="theme-switcher__label">
+                    <span class="theme-switcher__text">Светлая</span>
+                    <span class="theme-switcher__toggle-wrap">
+                        <input id="theme-toggle-checkbox" class="theme-switcher__toggle" type="checkbox" role="switch">
+                        <span class="theme-switcher__slider"></span>
+                    </span>
+                    <span class="theme-switcher__text">Тёмная</span>
+                </label>
+            </div>
+
             <a href=""><img src="./image/Image_system/icons8-vk-50.png" alt="Вк"></a>
             <div class="logo_contact">
                 <a href="./index.php"><h1>Laputa</h1></a>
@@ -147,25 +158,23 @@ session_start();
     </header>
     
     <section class="slider">
-        <div class="slides">
-            <div class="slide active">
-                <a href=""><img src="./image/slider/_uq7wWEJAHwl8KAeZtXW2kWIqKvtHTErFlmjX7-8lMSo0aZCoWyq_fnDwELMYMjWG9JpTGePbVCiFl1H8Gu37Knf.jpg" alt="Слайд 1"></a>
-            </div>
+        <div class="slides-container">
+            <?php foreach($sliders as $key): ?>
             <div class="slide">
-                <a href=""><img src="./image/slider/pA6qR2sbP9w.jpg" alt="Слайд 2"></a>
+                <!-- <a href="<?= $key['link'] ?? '#' ?>"> -->
+                    <img src="./image/slider/<?=$key['imageslider']?>" alt="Слайд">
+                <!-- </a> -->
             </div>
-            <div class="slide">
-                <a href=""><img src="./image/slider/yqJsE9mS_cU9k4_WUzGn8ukZrYNixsdcIGtKxAbE5wfokJf7yNCiny3KsXele6wzbhkq5VqTVYensHhZEl4KesNs.jpg" alt="Слайд 3"></a>
+            <?php endforeach; ?>
+        </div>
+        <div class="slider-controls">
+            <button class="slider-prev">‹</button>
+            <div class="slider-dots">
+                <?php foreach($sliders as $index => $key): ?>
+                <button class="slider-dot <?= $index === 0 ? 'active' : '' ?>"></button>
+                <?php endforeach; ?>
             </div>
-        </div>
-        <div class="controls">
-            <button class="prev">Предыдущий</button>
-            <button class="next">Следующий</button>
-        </div>
-        <div class="dots">
-            <button class="dot active"></button>
-            <button class="dot"></button>
-            <button class="dot"></button>
+            <button class="slider-next">›</button>
         </div>
     </section>
 
@@ -393,8 +402,9 @@ session_start();
             </div>
         </div>
     </footer>
-
-    <script src="./script/script.js"></script>
+    <a href=""></a>
+    <script src="./scripts/theme.js"></script>
+    <script src="./scripts/script.js"></script>
 </body>
 </html>
 

@@ -1,6 +1,5 @@
 <?
-
-require_once $_SERVER['DOCUMENT_ROOT'].'../../DB/start.php';
+require_once __DIR__ . '/../../DB/start.php';
 
 class PostModel{
 
@@ -193,11 +192,40 @@ class PostModel{
 
     }
 
+}
+
+class slider{
+        
+    public static function addSlider($imageslider) {
+        
+        $conn = DB::getConnection();
+
+        $query = $conn->prepare("INSERT INTO `sliders` (`imageslider`) VALUES (?)");
+        
+        $uploadedFileName = '';
+        if (isset($_FILES['imageslider']) && $_FILES['imageslider']['error'] === UPLOAD_ERR_OK) {
+            $ext = pathinfo($_FILES['imageslider']['name'], PATHINFO_EXTENSION);
+            $uploadedFileName = uniqid('', true) . '.' . $ext;
+            $uploadPath = '../../image/slider/' . $uploadedFileName;
+            
+            if (!move_uploaded_file($_FILES['imageslider']['tmp_name'], $uploadPath)) {
+                throw new Exception('Ошибка загрузки изображения слайдера');
+            }
+        } else {
+            throw new Exception('Файл не был загружен или произошла ошибка');
+        }
+        $query->execute([$uploadedFileName]);
+
+        return $uploadedFileName;
+    }
 
 
+    static function deleteSlider(){
 
+    }
 
+    static function redactSlider($id){
 
-
+    }
 
 }

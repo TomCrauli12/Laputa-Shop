@@ -103,8 +103,13 @@ elseif($_GET['action']=="AddToFavourites"){
     Header("Location: $return_url");
 
 }
-else{
+elseif($_GET['action']=="addSlider"){
 
+    $imageslider = $_FILES['imageslider']['name'];
+
+    slider::addSlider($imageslider);
+
+    Header("Location: ../../index.php");
 }
 
 
