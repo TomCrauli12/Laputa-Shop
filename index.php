@@ -47,6 +47,7 @@ $sliders = $query->fetchAll();
             <a href="./pages/contact.html">Контакты</a>
             <a href="./pages/create_product.html">Добавить товар</a>
             <a href="./pages/addToSlider.php">Добавить слайдер</a>
+            <a href="./pages/createCategory.php">Создать категорию</a>
         </div>
         <div class="contact">
             <div class="theme-switcher">

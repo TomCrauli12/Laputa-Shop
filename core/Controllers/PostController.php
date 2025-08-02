@@ -111,5 +111,15 @@ elseif($_GET['action']=="addSlider"){
 
     Header("Location: ../../index.php");
 }
+elseif($_GET['action']=="addCategory"){
+
+    $categoryName = $_POST['categoryName'];
+    
+    $categoryBDName = $_POST['categoryBDName'];
+
+    category::addCategory($categoryName, $categoryBDName);
+
+    Header("Location: ../../index.php");
+}
 
 

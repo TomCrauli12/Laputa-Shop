@@ -229,3 +229,17 @@ class slider{
     }
 
 }
+
+class category{
+
+    static function addCategory($categoryName, $categoryBDName){
+    
+        $conn = DB::getConnection();
+
+        $query = $conn->prepare("INSERT INTO `category` (`categoryName`, `categoryBDName`) VALUES (?, ?)");
+        
+        $query->execute([$categoryName, $categoryBDName]);
+    }
+
+
+}

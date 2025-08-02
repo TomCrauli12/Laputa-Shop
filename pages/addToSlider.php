@@ -1,9 +1,8 @@
 <?php
-session_start();
-require_once '../DB/start.php';
-
-
+    session_start();
+    require_once '../DB/start.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
