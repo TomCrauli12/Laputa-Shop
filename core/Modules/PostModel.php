@@ -17,7 +17,6 @@ class PostModel{
 static function createProduct($title, $descr, $price, $category, $files, $categorytwo, $info_block, $files_2, $files_3, $files_4, $files_5) {
     $conn = DB::getConnection();
 
-    // Обработка основного файла (обязательного)
     $uploadedFileName = '';
     if (isset($_FILES['files']) && $_FILES['files']['error'] === UPLOAD_ERR_OK) {
         $ext = pathinfo($_FILES['files']['name'], PATHINFO_EXTENSION);
@@ -30,9 +29,7 @@ static function createProduct($title, $descr, $price, $category, $files, $catego
     } else {
         throw new Exception('Главное изображение обязательно для загрузки');
     }
-
-    // Обработка дополнительных файлов (необязательных)
-    $uploadedFiles = ['', '', '', '']; // По умолчанию пустые значения
+    $uploadedFiles = ['', '', '', ''];
     
     $additionalFiles = [
         'files_2' => 0,
@@ -52,24 +49,21 @@ static function createProduct($title, $descr, $price, $category, $files, $catego
             }
         }
     }
-
-    // Вставка в БД
     $query = $conn->prepare("INSERT INTO `products` 
-        (title, descr, price, category, files, categorytwo, info_block, files_2, files_3, files_4, files_5) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        (title, descr, price, category, files, categorytwo, info_block, files_2, files_3, files_4, files_5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     
     $query->execute([
         $title,
         $descr,
         $price,
         $category,
-        $uploadedFileName, // Главное изображение
+        $uploadedFileName,
         $categorytwo,
         $info_block,
-        $uploadedFiles[0], // files_2
-        $uploadedFiles[1], // files_3
-        $uploadedFiles[2], // files_4
-        $uploadedFiles[3]  // files_5
+        $uploadedFiles[0],
+        $uploadedFiles[1],
+        $uploadedFiles[2],
+        $uploadedFiles[3]
     ]);
 }
 
