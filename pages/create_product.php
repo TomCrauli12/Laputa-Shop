@@ -1,3 +1,18 @@
+<?php 
+    session_start();
+
+    require_once '../DB/start.php';
+    require_once '../core/Modules/PostModel.php';
+
+    $conn = DB::getConnection();
+
+    $query = $conn->query('select * from category');
+    $allCategory = $query->fetchAll();
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +24,7 @@
 
     <!-- Добавить выбор информациооного блока
     добавить выбор категории -->
-<form enctype="multipart/form-data" action="../core/Controllers/PostController.php?action=create" method="POST">
+<form enctype="multipart/form-data" action="../core/Controllers/PostController.php?action=createProduct" method="POST">
     <label for="title">Название</label>
     <input name="title" class="title" required="" maxlength="20"/>
     <br>
@@ -22,36 +37,23 @@
     <input name="price" class="price" required="">
     <br>
     <br>
+
     <label for="category">Выбрать категорию</label><br>
-    <input name="category" type="radio" value="Манга">Манга<br>
-    <input name="category" type="radio" value="Одежда">Одежда<br>
-    <input name="category" type="radio" value="Постеры">Постеры<br>
-    <input name="category" type="radio" value="Стикерпаки">Стикерпаки<br>
-    <input name="category" type="radio" value="Наборы">Наборы<br>
-    <input name="category" type="radio" value="Фигурки">Фигурки<br>
-    <input name="category" type="radio" value="Ранобе">Ранобе<br>
-    <input name="category" type="radio" value="Значки">Значки<br>
-    <input name="category" type="radio" value="Косплеи">Косплеи<br>
-    <input name="category" type="radio" value="Продукция">Продукция<br>
+    <?php foreach($allCategory as $key): ?>
+        <input name="category" type="radio" value="<?=$key['categoryBDName']?>"><?=$key['categoryName']?><br>
+    <?php endforeach; ?>
+    <br>
+    <br>
 
-    <br>
-    <br>
     <label for="categorytwo">Выбрать дополнительную категорию</label><br>
-    <input name="categorytwo" type="radio" value="Манга">Манга<br>
-    <input name="categorytwo" type="radio" value="Одежда">Одежда<br>
-    <input name="categorytwo" type="radio" value="Постеры">Постеры<br>
-    <input name="categorytwo" type="radio" value="Стикерпаки">Стикерпаки<br>
-    <input name="categorytwo" type="radio" value="Наборы">Наборы<br>
-    <input name="categorytwo" type="radio" value="Фигурки">Фигурки<br>
-    <input name="categorytwo" type="radio" value="Ранобе">Ранобе<br>
-    <input name="categorytwo" type="radio" value="Значки">Значки<br>
-    <input name="categorytwo" type="radio" value="Косплеи">Косплеи<br>
-    <input name="categorytwo" type="radio" value="Продукция">Продукция<br>
+        <?php foreach($allCategory as $key): ?>
+        <input name="category" type="radio" value="<?=$key['categoryBDName']?>"><?=$key['categoryName']?><br>
+    <?php endforeach; ?>
     <br>
     <br>
 
 
-<!-- запихать потом каждый выбор в конте    нер и обернуть это все в  select -->
+<!-- запихать потом каждый выбор в конте нер и обернуть это все в  select -->
     <label for="info_block">Добавить в информациооный блок</label><br>
         <input name="info_block" type="radio" value="Новые товары">Новые товары<br>
         <input name="info_block" type="radio" value="Скидки">Скидки<br>
@@ -62,26 +64,27 @@
     <br>
     <br>
     <!-- Название элемента input определяет имя в массиве $_FILES -->
-    <label for="files">добавить изображение 1</label>
-    <input name="files" type="file" />
-    <br>
-    <br>
-    <label for="files_2">добавить изображение 2</label>
+    <!-- Измените input для дополнительных файлов, сделав их необязательными -->
+    <label for="files">добавить главное изображение (обязательно)</label>
+    <input name="files" type="file" required />
+    <br><br>
+
+    <label for="files_2">добавить изображение 2 (необязательно)</label>
     <input name="files_2" type="file" />
-    <br>
-    <br>
-    <label for="files_3">добавить изображение 3</label>
+    <br><br>
+
+    <label for="files_3">добавить изображение 3 (необязательно)</label>
     <input name="files_3" type="file" />
-    <br>
-    <br>
-    <label for="files_4">добавить изображение 4</label>
+    <br><br>
+
+    <label for="files_4">добавить изображение 4 (необязательно)</label>
     <input name="files_4" type="file" />
-    <br>
-    <br>
-    <label for="files_5">добавить изображение 5</label>
+    <br><br>
+
+    <label for="files_5">добавить изображение 5 (необязательно)</label>
     <input name="files_5" type="file" />
-    <br>
-    <br>
+    <br><br>
+
     <input type="submit" value="создать товар" />
 </form>
 

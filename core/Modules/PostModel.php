@@ -14,82 +14,70 @@ class PostModel{
 
     }
 
-    static function createPost($title, $descr, $price, $category, $files, $categorytwo, $info_block, $files_2, $files_3, $files_4, $files_5){
+static function createProduct($title, $descr, $price, $category, $files, $categorytwo, $info_block, $files_2, $files_3, $files_4, $files_5) {
+    $conn = DB::getConnection();
+
+    // Обработка основного файла (обязательного)
+    $uploadedFileName = '';
+    if (isset($_FILES['files']) && $_FILES['files']['error'] === UPLOAD_ERR_OK) {
+        $ext = pathinfo($_FILES['files']['name'], PATHINFO_EXTENSION);
+        $uploadedFileName = uniqid('', true) . '.' . $ext;
+        $uploadPath = '../../image/image_product/' . $uploadedFileName;
         
-        $conn = DB::getConnection();
-
-        $query = $conn->prepare("INSERT INTO products (title,descr,price,category,files,categorytwo,info_block,files_2,files_3,files_4,files_5) values (?,?,?,?,?,?,?,?,?,?,?)");
-
-        $query->execute([$title,$descr,$price,$category,$files,$categorytwo,$info_block,$files_2,$files_3,$files_4,$files_5]);
-
-        $_FILES['files'];
-
-        $_FILES['files']['type'];
-
-        $_FILES['files']['tmp_name'];
-
-        $_FILES['files_2'];
-
-        $_FILES['files_2']['type'];
-
-        $_FILES['files_2']['tmp_name'];
-
-        $_FILES['files_3'];
-
-        $_FILES['files_3']['type'];
-
-        $_FILES['files_3']['tmp_name'];
-
-        $_FILES['files_4'];
-
-        $_FILES['files_4']['type'];
-
-        $_FILES['files_4']['tmp_name'];
-
-        $_FILES['files_5'];
-
-        $_FILES['files_5']['type'];
-
-        $_FILES['files_5']['tmp_name'];
-
-
-        if(move_uploaded_file($_FILES['files']['tmp_name'], '../image/image_product/'.$_FILES['files']['name'])) {
-            echo 'файл загружен';
-        } else {
-            echo 'ошибка загрузки';
+        if (!move_uploaded_file($_FILES['files']['tmp_name'], $uploadPath)) {
+            throw new Exception('Ошибка загрузки главного изображения');
         }
-
-        if(move_uploaded_file($_FILES['files_2']['tmp_name'], '../image/image_product/'.$_FILES['files_2']['name'])) {
-            echo 'файл загружен';
-        } else {
-            echo 'ошибка загрузки';
-        }
-
-        if(move_uploaded_file($_FILES['files_3']['tmp_name'], '../image/image_product/'.$_FILES['files_3']['name'])) {
-            echo 'файл загружен';
-        } else {
-            echo 'ошибка загрузки';
-        }
-
-        if(move_uploaded_file($_FILES['files_4']['tmp_name'], '../image/image_product/'.$_FILES['files_4']['name'])) {
-            echo 'файл загружен';
-        } else {
-            echo 'ошибка загрузки';
-        }
-
-        if(move_uploaded_file($_FILES['files_5']['tmp_name'], '../image/image_product/'.$_FILES['files_5']['name'])) {
-            echo 'файл загружен';
-        } else {
-            echo 'ошибка загрузки';
-        }
-    
+    } else {
+        throw new Exception('Главное изображение обязательно для загрузки');
     }
+
+    // Обработка дополнительных файлов (необязательных)
+    $uploadedFiles = ['', '', '', '']; // По умолчанию пустые значения
+    
+    $additionalFiles = [
+        'files_2' => 0,
+        'files_3' => 1,
+        'files_4' => 2,
+        'files_5' => 3
+    ];
+    
+    foreach ($additionalFiles as $fileKey => $index) {
+        if (isset($_FILES[$fileKey]) && $_FILES[$fileKey]['error'] === UPLOAD_ERR_OK) {
+            $ext = pathinfo($_FILES[$fileKey]['name'], PATHINFO_EXTENSION);
+            $filename = uniqid('', true) . '.' . $ext;
+            $uploadPath = '../../image/image_product/' . $filename;
+            
+            if (move_uploaded_file($_FILES[$fileKey]['tmp_name'], $uploadPath)) {
+                $uploadedFiles[$index] = $filename;
+            }
+        }
+    }
+
+    // Вставка в БД
+    $query = $conn->prepare("INSERT INTO `products` 
+        (title, descr, price, category, files, categorytwo, info_block, files_2, files_3, files_4, files_5) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    
+    $query->execute([
+        $title,
+        $descr,
+        $price,
+        $category,
+        $uploadedFileName, // Главное изображение
+        $categorytwo,
+        $info_block,
+        $uploadedFiles[0], // files_2
+        $uploadedFiles[1], // files_3
+        $uploadedFiles[2], // files_4
+        $uploadedFiles[3]  // files_5
+    ]);
+}
 
     static function getInfoBlock($block_name){
 
         $conn = DB::getConnection();
 
-        $query = $conn->prepare('select * from products where info_block = ?');
+        $query = $conn->prepare('select * from `products` where info_block = ?');
         //подготовка в таблице продуктс где инфо блок равен неизвестно
         $query->execute([$block_name]);
         // тут подставляем значение скидки
@@ -102,7 +90,7 @@ class PostModel{
 
         $conn = DB::getConnection();
 
-        $query =  $conn->prepare('select * from products where category = ?');
+        $query =  $conn->prepare('select * from `products` where category = ?');
 
         $query->execute([$category_name]);
 
@@ -115,7 +103,7 @@ class PostModel{
 
         $conn = DB::getConnection();
 
-        $query =  $conn->prepare('select * from products where info_block = ?');
+        $query =  $conn->prepare('select * from `products` where info_block = ?');
 
         $query->execute([$info_conteiner]);
 
@@ -133,7 +121,7 @@ class PostModel{
 
         $conn = DB::getConnection();
 
-        $query =  $conn->prepare('SELECT * FROM products WHERE price BETWEEN ? AND ? AND category = ?');
+        $query =  $conn->prepare('SELECT * FROM `products` WHERE price BETWEEN ? AND ? AND category = ?');
 
         $query->execute([$min_value, $max_value, $category]);
 
@@ -147,7 +135,7 @@ class PostModel{
 
         $conn = DB::getConnection();
 
-        $query = $conn->prepare("INSERT INTO basket (product_id, user_id) values (?,?)");
+        $query = $conn->prepare("INSERT INTO `basket` (product_id, user_id) values (?,?)");
 
         $query->execute([$product_id, $user_id]);
 
@@ -157,7 +145,7 @@ class PostModel{
 
         $conn = DB::getConnection();
 
-        $query = $conn->prepare("INSERT INTO favourites (product_id, user_id) values (?,?)");
+        $query = $conn->prepare("INSERT INTO `favourites` (product_id, user_id) values (?,?)");
 
         $query->execute([$product_id, $user_id]);
     }
@@ -166,7 +154,7 @@ class PostModel{
 
         $conn = DB::getConnection();
 
-        $query = $conn->prepare("INSERT INTO bascet (product_id, user_id) values (?,?)");
+        $query = $conn->prepare("INSERT INTO `bascet` (product_id, user_id) values (?,?)");
 
         $query->execute([$product_id, $user_id]);
     }
@@ -176,7 +164,7 @@ class PostModel{
 
         $conn = DB::getConnection();
 
-        $query = $conn->prepare("DELETE FROM basket WHERE id = ?");
+        $query = $conn->prepare("DELETE FROM `basket` WHERE id = ?");
 
         $query->execute([$id]);
 
@@ -186,7 +174,7 @@ class PostModel{
 
         $conn = DB::getConnection();
 
-        $query = $conn->prepare("DELETE FROM favourites WHERE id = ?");
+        $query = $conn->prepare("DELETE FROM `favourites` WHERE id = ?");
 
         $query->execute([$id]);
 

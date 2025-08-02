@@ -11,36 +11,35 @@ if($_GET['action']=="delete"){
     Header("Location: /");
 
 }
-elseif($_GET['action']=="create"){
+elseif($_GET['action'] == "createProduct") {
+    try {
+        $title = $_POST['title'];
+        $descr = $_POST['descr'];
+        $price = $_POST['price'];
+        $category = $_POST['category'];
+        $categorytwo = $_POST['categorytwo'] ?? '';
+        $info_block = $_POST['info_block'] ?? ''; 
 
-    $title = $_POST['title'];
+        PostModel::createProduct(
+            $title,
+            $descr,
+            $price,
+            $category,
+            $_FILES['files'],
+            $categorytwo,
+            $info_block,
+            $_FILES['files_2'] ?? null,
+            $_FILES['files_3'] ?? null,
+            $_FILES['files_4'] ?? null,
+            $_FILES['files_5'] ?? null
+        );
 
-    $descr = $_POST['descr'];
-    
-    $price = $_POST['price'];
-
-    $category = $_POST['category'];
-    
-    $files = $_FILES['files']['name'];
-    
-    $categorytwo = $_POST['categorytwo'];
-
-    $info_block = $_POST['info_block'];
-
-    $files_2 = $_FILES['files_2']['name'];
-
-    $files_3 = $_FILES['files_3']['name'];
-
-    $files_4 = $_FILES['files_4']['name'];
-
-    $files_5 = $_FILES['files_5']['name'];
-
-
-    PostModel::createPost($title, $descr, $price, $category, $files, $categorytwo, $info_block, $files_2, $files_3, $files_4, $files_5);
-
-    Header("Location: /");
-
-}  
+        header("Location: ../../index.php");
+        exit();
+    } catch (Exception $e) {
+        die("Ошибка при создании товара: " . $e->getMessage());
+    }
+}
 
 else{
 
