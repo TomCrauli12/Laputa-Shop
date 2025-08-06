@@ -120,5 +120,15 @@ elseif($_GET['action']=="addCategory"){
 
     Header("Location: ../../index.php");
 }
+elseif($_GET['action']=="addInfoBlock"){
+
+    $infoBlockName = $_POST['infoBlockName'];
+    
+    $infoBlockDBName = $_POST['infoBlockDBName'];
+
+    infoBlock::addInfoBlock($infoBlockName, $infoBlockDBName);
+
+    Header("Location: ../../index.php");
+}
 
 

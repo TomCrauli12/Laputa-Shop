@@ -1,8 +1,7 @@
 <?php session_start();
 
-require_once './start.php';
-require_once './scripts/PostModel.php';
-
+require_once '../DB/start.php';
+require_once '../core/Modules/PostModel.php';
 
 $conn = DB::getConnection();
 
@@ -59,8 +58,10 @@ else{
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style/category.css">
-    <link rel="stylesheet" href="./style/medea.css">
+    <link rel="stylesheet" href="../style/static.css">
+    <link rel="stylesheet" href="../style/category.css">
+    <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="../style/medea.css">
     <title>Laputa | <?=$_GET['name']?></title>
 </head>
 <body>
@@ -70,9 +71,23 @@ else{
             <a href="./Refund.html">Возврат и обмен</a>
             <a href="./about.html">О нас</a>
             <a href="./contact.html">Контакты</a>
-            <a href="./create_product.html">Добавить товар</a>
+            <a href="./create_product.php">Добавить товар</a>
+            <a href="./addToSlider.php">Добавить слайдер</a>
+            <a href="./createCategory.php">Создать категорию</a>
+            <a href="./createInfoBlock.php">Создать информационный блок</a>
         </div>
         <div class="contact">
+            <div class="theme-switcher">
+                <label for="theme-toggle-checkbox" class="theme-switcher__label">
+                    <span class="theme-switcher__text">Светлая</span>
+                    <span class="theme-switcher__toggle-wrap">
+                        <input id="theme-toggle-checkbox" class="theme-switcher__toggle" type="checkbox" role="switch">
+                        <span class="theme-switcher__slider"></span>
+                    </span>
+                    <span class="theme-switcher__text">Тёмная</span>
+                </label>
+            </div>
+
             <a href=""><img src="../image/Image_system/icons8-vk-50.png" alt="Вк"></a>
             <div class="logo_contact">
                 <a href="../index.php"><h1>Laputa</h1></a>
@@ -165,7 +180,7 @@ else{
                 <div class="nav_item">
                     <a href="./login.php"><img src="../image/Image_system/icons8-корзины-32.png" alt=""></a>
                     <a href="./login.php">Корзина</a>
-                </div>      
+                </div>          
             <?php endif; ?>
         </div>
     </header>
@@ -297,5 +312,7 @@ else{
             </div>
         </div>
     </footer>
+    <script src="../scripts/theme.js"></script>
+    <script src="../scripts/script.js"></script>
 </body>
 </html>

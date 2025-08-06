@@ -8,16 +8,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const nextBtn = slider.querySelector('.slider-next');
     const dots = Array.from(slider.querySelectorAll('.slider-dot'));
     
+    if (slides.length === 0 || !container || !prevBtn || !nextBtn) return;
+    
     let currentIndex = 0;
     let intervalId;
-    
+    const SLIDE_INTERVAL = 5000; // Уменьшил интервал до 5 сек (было 10)
+    const TRANSITION_DURATION = 300; // Добавил константу для длительности анимации
 
     function initSlider() {
-
         slides[currentIndex].classList.add('active');
         updateDots();
         startAutoPlay();
-        
 
         prevBtn.addEventListener('click', prevSlide);
         nextBtn.addEventListener('click', nextSlide);
@@ -28,18 +29,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
         slider.addEventListener('mouseenter', stopAutoPlay);
         slider.addEventListener('mouseleave', startAutoPlay);
+        slider.addEventListener('touchstart', stopAutoPlay, {passive: true});
+        slider.addEventListener('touchend', startAutoPlay, {passive: true});
     }
-    
 
     function goToSlide(index) {
-        if (index === currentIndex) return;
+        if (index === currentIndex || index < 0 || index >= slides.length) return;
         
         const direction = index > currentIndex ? 'next' : 'prev';
-        const newIndex = (index + slides.length) % slides.length;
+        const newIndex = index;
         
-
-        slides[currentIndex].classList.add(direction);
         slides[newIndex].classList.add(direction);
+        void slides[newIndex].offsetWidth; 
+        
+        slides[currentIndex].classList.add(direction);
         
         setTimeout(() => {
             slides[currentIndex].classList.remove('active', 'next', 'prev');
@@ -48,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             currentIndex = newIndex;
             updateDots();
-        }, 50);
+        }, TRANSITION_DURATION);
         
         resetAutoPlay();
     }
@@ -70,18 +73,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function startAutoPlay() {
-        stopAutoPlay();
-        intervalId = setInterval(nextSlide, 10000);
+        if (intervalId) return; 
+        intervalId = setInterval(nextSlide, SLIDE_INTERVAL);
     }
     
     function stopAutoPlay() {
         clearInterval(intervalId);
+        intervalId = null;
     }
     
     function resetAutoPlay() {
         stopAutoPlay();
         startAutoPlay();
     }
+    
+    document.addEventListener('visibilitychange', () => {
+        document.hidden ? stopAutoPlay() : startAutoPlay();
+    });
     
     initSlider();
 });

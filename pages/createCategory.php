@@ -2,7 +2,6 @@
     session_start();
     require_once '../DB/start.php'; 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +17,7 @@
         <label for="categoryBDName">Название категории(на английском!)</label>
         <input type="text" name="categoryBDName" id="">
 
-        <button>Создать категорию</button>
+        <button>Создать информационный блок</button>
     </form>
 </body>
 </html>

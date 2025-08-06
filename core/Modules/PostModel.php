@@ -67,19 +67,26 @@ static function createProduct($title, $descr, $price, $category, $files, $catego
     ]);
 }
 
-    static function getInfoBlock($block_name){
-
+    public static function getProductsByBlockDBName($blockDBName) {
         $conn = DB::getConnection();
-
-        $query = $conn->prepare('select * from `products` where info_block = ?');
-        //подготовка в таблице продуктс где инфо блок равен неизвестно
-        $query->execute([$block_name]);
-        // тут подставляем значение скидки
-        $result = $query->fetchAll();
-
-        return $result;
-    
+        
+        // Предполагаем, что в таблице products есть поле block_db_name
+        $stmt = $conn->prepare("SELECT * FROM products WHERE info_block = :blockDBName ORDER BY id DESC LIMIT 5");
+        $stmt->bindParam(':blockDBName', $blockDBName);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    // public static function getInfoBlock($blockDBName) {
+    //     $conn = DB::getConnection();
+        
+    //     // Предполагаем, что в таблице products есть поле info_block_db_name
+    //     $stmt = $conn->prepare("SELECT * FROM products WHERE infoBlockDBName = :blockDBName LIMIT 5");
+    //     $stmt->bindParam(':blockDBName', $blockDBName);
+    //     $stmt->execute();
+        
+    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // }
     static function getCategory($category_name){
 
         $conn = DB::getConnection();
@@ -223,5 +230,17 @@ class category{
         $query->execute([$categoryName, $categoryBDName]);
     }
 
+
+}
+class infoBlock{
+
+    static function addInfoBlock($infoBlockName, $infoBlockDBName){
+    
+        $conn = DB::getConnection();
+
+        $query = $conn->prepare("INSERT INTO `infoblock` (`infoBlockName`, `infoBlockDBName`) VALUES (?, ?)");
+        
+        $query->execute([$infoBlockName, $infoBlockDBName]);
+    }
 
 }

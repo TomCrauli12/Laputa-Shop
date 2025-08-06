@@ -9,6 +9,9 @@
     $query = $conn->query('select * from category');
     $allCategory = $query->fetchAll();
 
+    $query = $conn->query('select * from infoblock');
+    $allInfoblock = $query->fetchAll();
+
 ?>
 
 
@@ -52,13 +55,11 @@
     <br>
     <br>
 
-
-<!-- запихать потом каждый выбор в конте нер и обернуть это все в  select -->
     <label for="info_block">Добавить в информациооный блок</label><br>
-        <input name="info_block" type="radio" value="Новые товары">Новые товары<br>
-        <input name="info_block" type="radio" value="Скидки">Скидки<br>
-        <input name="info_block" type="radio" value="Предзаказы">Предзаказы<br>
-        <input name="info_block" type="radio" value="Распродажа">Распродажа<br>
+        <?php foreach($allInfoblock as $key): ?>
+        <input name="info_block" type="radio" value="<?=$key['infoBlockDBName']?>"><?=$key['infoBlockName']?><br>
+    <?php endforeach; ?>
+
 
     
     <br>
