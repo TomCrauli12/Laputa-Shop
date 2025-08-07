@@ -100,37 +100,60 @@ static function createProduct($title, $descr, $price, $category, $files, $catego
         return $result;
     }
 
-    static function getinfoConteiner($info_conteiner){
-
+    public static function getinfoConteiner($blockDBName) {
+        
         $conn = DB::getConnection();
-
-        $query =  $conn->prepare('select * from `products` where info_block = ?');
-
-        $query->execute([$info_conteiner]);
-
-        $result = $query->fetchAll();
-
-        return $result;
+        
+        $stmt = $conn->prepare("SELECT * FROM products WHERE info_block = ?");
+        
+        $stmt->execute([$blockDBName]);
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public static function getSort($min_value, $max_value, $blockDBName) {
+        
+        $conn = DB::getConnection();
+        
+        $stmt = $conn->prepare("SELECT * FROM products WHERE price BETWEEN ? AND ? AND info_block = ?");
+        
+        $stmt->execute([$min_value, $max_value, $blockDBName]);
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public static function getProductsByCategory($categoryBDName) {
+        $conn = DB::getConnection();
+        try {
+            $stmt = $conn->prepare("
+                SELECT p.* 
+                FROM products p
+                WHERE p.category = ?
+            ");
+            $stmt->execute([$categoryBDName]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return [];
+        }
+    }
+    
+    public static function getProductsByCategoryWithPriceFilter($categoryBDName, $min_value, $max_value) {
+        $conn = DB::getConnection();
+        try {
+            $stmt = $conn->prepare("
+                SELECT p.* 
+                FROM products p
+                WHERE p.category = ?
+                AND p.price BETWEEN ? AND ?
+            ");
+            $stmt->execute([$categoryBDName, $min_value, $max_value]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return [];
+        }
     }
 
-
-
-
-
-
-    static function getSort($min_value, $max_value, $category){
-
-        $conn = DB::getConnection();
-
-        $query =  $conn->prepare('SELECT * FROM `products` WHERE price BETWEEN ? AND ? AND category = ?');
-
-        $query->execute([$min_value, $max_value, $category]);
-
-        $result = $query->fetchAll();
-
-        return $result;
-
-    }
 
     static function AddToBasket($product_id, $user_id){
 

@@ -6,16 +6,28 @@ require_once '../core/Modules/PostModel.php';
 
 $conn = DB::getConnection();
 
-// Обработка параметров
-$name = $_GET['name'] ?? "Манга";
+$category = $conn->query('SELECT * FROM category')->fetchAll();
+
+// Получаем имя блока из параметра 
+$blockDBName = $_GET['block'] ?? '';
+$name = "Манга"; // Значение по умолчанию
+
+// Получаем отображаемое имя блока из базы данных
+if (!empty($blockDBName)) {
+    $stmt = $conn->prepare("SELECT infoBlockName FROM infoblock WHERE infoBlockDBName = ?");
+    $stmt->execute([$blockDBName]);
+    $block = $stmt->fetch(PDO::FETCH_ASSOC);
+    $name = $block['infoBlockName'] ?? $name;
+}
+
+
 $min_value = isset($_GET['min_value']) ? (int)$_GET['min_value'] : 100;
 $max_value = (isset($_GET['max_value']) && $_GET['max_value'] > 0) ? (int)$_GET['max_value'] : 100000;
 
-// Получение товаров
 if(isset($_GET['min_value']) && isset($_GET['max_value'])) {
-    $products = PostModel::getSort($min_value, $max_value, $name);
+    $products = PostModel::getSort($min_value, $max_value, $blockDBName);
 } else {
-    $products = PostModel::getinfoConteiner($name);
+    $products = PostModel::getinfoConteiner($blockDBName);
 }
 ?>
 
@@ -78,16 +90,11 @@ if(isset($_GET['min_value']) && isset($_GET['max_value'])) {
                 
                 <div class="info-block">
                     <nav class="categories">
-                        <a href="./category.php?name=Манга">Манга</a>
-                        <a href="./category.php?name=Одежда">Одежда</a>
-                        <a href="./category.php?name=Постеры">Постеры</a>
-                        <a href="./category.php?name=Стикерпаки">Стикерпаки</a>
-                        <a href="./category.php?name=Наборы">Наборы</a>
-                        <a href="./category.php?name=Фигурки">Фигурки</a>
-                        <a href="./category.php?name=Ранобэ">Ранобэ</a>
-                        <a href="./category.php?name=Значки">Значки</a>
-                        <a href="./category.php?name=Косплеи">Косплеи</a>
-                        <a href="./category.php?name=Продукция">Продукция</a>
+                        <?php foreach($category as $category): ?>
+                            <a href="/pages/category.php?name=<?=urlencode($category['categoryName'])?>">
+                                <?=htmlspecialchars($category['categoryName'])?>
+                            </a>
+                        <?php endforeach; ?>
                     </nav>
                 </div>
             </div>
@@ -149,9 +156,9 @@ if(isset($_GET['min_value']) && isset($_GET['max_value'])) {
                     <input type="number" id="min_value" name="min_value" value="<?=$min_value?>"><br><br>
                     <label for="max_value">До</label>
                     <input type="number" id="max_value" name="max_value" value="<?=$max_value?>"><br><br>
-                    <input type="hidden" name="name" value="<?=htmlspecialchars($name)?>">
+                    <input type="hidden" name="block" value="<?=htmlspecialchars($blockDBName)?>">
                     <button type="submit">Применить</button>
-                    <a href="./category.php?name=<?=urlencode($name)?>" class="reset-btn">Сбросить</a>
+                    <a href="./categoryMore.php?block=<?=urlencode($blockDBName)?>" class="reset-btn">Сбросить</a>
                 </form>
             </div>
             

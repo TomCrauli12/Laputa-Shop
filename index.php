@@ -26,7 +26,7 @@ foreach ($infoBlocks as $block) {
 }
 
 // Получаем категории для меню
-$categories = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
+$category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -84,11 +84,11 @@ $categories = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC)
                 <label for="burger-checkbox">
                     <div class="burger"></div>
                 </label>
+
                 <a href="#" id="catalog-link">Каталог</a>
-                
                 <div class="info-block">
                     <nav class="categories">
-                        <?php foreach($categories as $category): ?>
+                        <?php foreach($category as $category): ?>
                             <a href="/pages/category.php?name=<?=urlencode($category['categoryName'])?>">
                                 <?=htmlspecialchars($category['categoryName'])?>
                             </a>
@@ -229,7 +229,7 @@ $categories = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC)
         <?php endforeach; ?>
     </main>
 
-    
+
     <footer>
         <div class="footer-content">
             <div class="footer-section">
