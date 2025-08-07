@@ -21,7 +21,7 @@ foreach ($infoBlocks as $block) {
     
     $blocksData[$blockDBName] = [
         'name' => $blockDisplayName,
-        'products' => PostModel::getProductsByBlockDBName($blockDBName)
+        'products' => infoBlock::getProductsByBlockDBName($blockDBName)
     ];
 }
 

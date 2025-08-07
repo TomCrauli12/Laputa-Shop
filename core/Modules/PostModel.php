@@ -67,26 +67,6 @@ static function createProduct($title, $descr, $price, $category, $files, $catego
     ]);
 }
 
-    public static function getProductsByBlockDBName($blockDBName) {
-        $conn = DB::getConnection();
-        
-        // Предполагаем, что в таблице products есть поле block_db_name
-        $stmt = $conn->prepare("SELECT * FROM products WHERE info_block = :blockDBName ORDER BY id DESC LIMIT 5");
-        $stmt->bindParam(':blockDBName', $blockDBName);
-        $stmt->execute();
-        
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    // public static function getInfoBlock($blockDBName) {
-    //     $conn = DB::getConnection();
-        
-    //     // Предполагаем, что в таблице products есть поле info_block_db_name
-    //     $stmt = $conn->prepare("SELECT * FROM products WHERE infoBlockDBName = :blockDBName LIMIT 5");
-    //     $stmt->bindParam(':blockDBName', $blockDBName);
-    //     $stmt->execute();
-        
-    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    // }
     static function getCategory($category_name){
 
         $conn = DB::getConnection();
@@ -120,38 +100,6 @@ static function createProduct($title, $descr, $price, $category, $files, $catego
         $stmt->execute([$min_value, $max_value, $blockDBName]);
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    public static function getProductsByCategory($categoryBDName) {
-        $conn = DB::getConnection();
-        try {
-            $stmt = $conn->prepare("
-                SELECT p.* 
-                FROM products p
-                WHERE p.category = ?
-            ");
-            $stmt->execute([$categoryBDName]);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            error_log("Database error: " . $e->getMessage());
-            return [];
-        }
-    }
-    
-    public static function getProductsByCategoryWithPriceFilter($categoryBDName, $min_value, $max_value) {
-        $conn = DB::getConnection();
-        try {
-            $stmt = $conn->prepare("
-                SELECT p.* 
-                FROM products p
-                WHERE p.category = ?
-                AND p.price BETWEEN ? AND ?
-            ");
-            $stmt->execute([$categoryBDName, $min_value, $max_value]);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            error_log("Database error: " . $e->getMessage());
-            return [];
-        }
     }
 
 
@@ -252,6 +200,38 @@ class category{
         
         $query->execute([$categoryName, $categoryBDName]);
     }
+        public static function getProductsByCategory($categoryBDName) {
+        $conn = DB::getConnection();
+        try {
+            $stmt = $conn->prepare("
+                SELECT p.* 
+                FROM products p
+                WHERE p.category = ?
+            ");
+            $stmt->execute([$categoryBDName]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return [];
+        }
+    }
+    
+    public static function getProductsByCategoryWithPriceFilter($categoryBDName, $min_value, $max_value) {
+        $conn = DB::getConnection();
+        try {
+            $stmt = $conn->prepare("
+                SELECT p.* 
+                FROM products p
+                WHERE p.category = ?
+                AND p.price BETWEEN ? AND ?
+            ");
+            $stmt->execute([$categoryBDName, $min_value, $max_value]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return [];
+        }
+    }
 
 
 }
@@ -264,6 +244,16 @@ class infoBlock{
         $query = $conn->prepare("INSERT INTO `infoblock` (`infoBlockName`, `infoBlockDBName`) VALUES (?, ?)");
         
         $query->execute([$infoBlockName, $infoBlockDBName]);
+    }
+
+    public static function getProductsByBlockDBName($blockDBName) {
+        $conn = DB::getConnection();
+        
+        $stmt = $conn->prepare("SELECT * FROM products WHERE info_block = :blockDBName ORDER BY id DESC LIMIT 5");
+        $stmt->bindParam(':blockDBName', $blockDBName);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 }

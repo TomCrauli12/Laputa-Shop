@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 
 require_once '../DB/start.php';
@@ -6,29 +6,71 @@ require_once '../core/Modules/PostModel.php';
 
 $conn = DB::getConnection();
 
-$category = $conn->query('SELECT * FROM category')->fetchAll();
+$listcategory = $conn->query('SELECT * FROM category')->fetchAll();
 
-// Получаем имя блока из параметра 
-$blockDBName = $_GET['block'] ?? '';
-$name = "Манга"; // Значение по умолчанию
+// Определяем, вызываем ли мы категорию или информационный блок
+if (isset($_GET['name'])) {
+    // Режим категории (как в первом файле)
+    $categoryName = $_GET['name'] ?? "Манга";
+    $pageTitle = $categoryName;
+    
+    // Получаем информацию о категории
+    $stmt = $conn->prepare("SELECT * FROM category WHERE categoryName = ?");
+    $stmt->execute([$categoryName]);
+    $category = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Получаем отображаемое имя блока из базы данных
-if (!empty($blockDBName)) {
-    $stmt = $conn->prepare("SELECT infoBlockName FROM infoblock WHERE infoBlockDBName = ?");
-    $stmt->execute([$blockDBName]);
-    $block = $stmt->fetch(PDO::FETCH_ASSOC);
-    $name = $block['infoBlockName'] ?? $name;
-}
+    if (!$category) {
+        header("Location: /index.php?error=category_not_found");
+        exit();
+    }
 
+    // Получаем параметры фильтрации
+    $min_value = $_GET['min_value'] ?? 100;
+    $max_value = ($_GET['max_value'] ?? 0) > 0 ? $_GET['max_value'] : 100000;
 
-$min_value = isset($_GET['min_value']) ? (int)$_GET['min_value'] : 100;
-$max_value = (isset($_GET['max_value']) && $_GET['max_value'] > 0) ? (int)$_GET['max_value'] : 100000;
+    // Получаем товары по categoryBDName
+    if(isset($_GET['min_value']) && isset($_GET['max_value'])) {
+        $products = category::getProductsByCategoryWithPriceFilter($category['categoryBDName'], $min_value, $max_value);
+    } else {
+        $products = category::getProductsByCategory($category['categoryBDName']);
+    }
+    
+    $hidden_field = '<input type="hidden" name="name" value="'.htmlspecialchars($categoryName).'">';
+    $reset_url = './category.php?name='.urlencode($categoryName);
+} elseif (isset($_GET['block'])) {
+    // Режим информационного блока (как во втором файле)
+    $blockDBName = $_GET['block'] ?? '';
+    $name = "Манга"; // Значение по умолчанию
 
-if(isset($_GET['min_value']) && isset($_GET['max_value'])) {
-    $products = PostModel::getSort($min_value, $max_value, $blockDBName);
+    // Получаем отображаемое имя блока из базы данных
+    if (!empty($blockDBName)) {
+        $stmt = $conn->prepare("SELECT infoBlockName FROM infoblock WHERE infoBlockDBName = ?");
+        $stmt->execute([$blockDBName]);
+        $block = $stmt->fetch(PDO::FETCH_ASSOC);
+        $name = $block['infoBlockName'] ?? $name;
+    }
+    
+    $pageTitle = $name;
+    $categoryName = $name;
+
+    $min_value = isset($_GET['min_value']) ? (int)$_GET['min_value'] : 100;
+    $max_value = (isset($_GET['max_value']) && $_GET['max_value'] > 0) ? (int)$_GET['max_value'] : 100000;
+
+    if(isset($_GET['min_value']) && isset($_GET['max_value'])) {
+        $products = PostModel::getSort($min_value, $max_value, $blockDBName);
+    } else {
+        $products = PostModel::getinfoConteiner($blockDBName);
+    }
+    
+    $hidden_field = '<input type="hidden" name="block" value="'.htmlspecialchars($blockDBName).'">';
+    $reset_url = './categoryMore.php?block='.urlencode($blockDBName);
 } else {
-    $products = PostModel::getinfoConteiner($blockDBName);
+    header("Location: /index.php");
+    exit();
 }
+
+// Получаем все категории для меню
+$allCategories = $conn->query('SELECT * FROM category')->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -36,11 +78,10 @@ if(isset($_GET['min_value']) && isset($_GET['max_value'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laputa | <?=htmlspecialchars($name)?></title>
     <link rel="stylesheet" href="../style/static.css">
-    <link rel="stylesheet" href="../style/style.css">
-    <link rel="stylesheet" href="../style/category.css">
-    <link rel="stylesheet" href="../style/medea.css">
+    <link rel="stylesheet" href="../style/product_grid.css">
+    <link rel="stylesheet" href="../style/product_card.css">
+    <title>Laputa | <?=htmlspecialchars($pageTitle)?></title>
 </head>
 <body>
     <nav class="navbar">
@@ -68,9 +109,6 @@ if(isset($_GET['min_value']) && isset($_GET['max_value'])) {
                 </label>
             </div>
             <a href="#"><img src="../image/Image_system/icons8-vk-50.png" alt="Вк"></a>
-            <div class="logo_contact">
-                <a href="../index.php"><h1>Laputa</h1></a>
-            </div>
             <a href="#"><img src="../image/Image_system/icons8-телеграм-50.png" alt="Тг"></a>
         </div>
     </nav>
@@ -90,7 +128,7 @@ if(isset($_GET['min_value']) && isset($_GET['max_value'])) {
                 
                 <div class="info-block">
                     <nav class="categories">
-                        <?php foreach($category as $category): ?>
+                        <?php foreach($listcategory as $category): ?>
                             <a href="/pages/category.php?name=<?=urlencode($category['categoryName'])?>">
                                 <?=htmlspecialchars($category['categoryName'])?>
                             </a>
@@ -143,92 +181,86 @@ if(isset($_GET['min_value']) && isset($_GET['max_value'])) {
             </div>
         </div>
     </header>
-    
+
     <main>
-        <div class="name"><h1><?=htmlspecialchars($name)?></h1></div>
+        <div class="sorting">
+            <h2>Сортировка</h2>
+            <form method="get">
+                <p>Цена</p>
+                <label for="min_value">От</label>
+                <input type="number" id="min_value" name="min_value" value="<?=$min_value?>"><br><br>
+                <label for="max_value">До</label>
+                <input type="number" id="max_value" name="max_value" value="<?=$max_value?>"><br><br>
+                <?=$hidden_field?>
+                <button type="submit">Применить</button>
+                <a href="<?=$reset_url?>" class="reset-btn">Сбросить</a>
+            </form>
+        </div>
         
         <section class="conteiner_product">
-            <div class="sorting">
-                <h2>Сортировка</h2>
-                <form method="get">
-                    <p>Цена</p>
-                    <label for="min_value">От</label>
-                    <input type="number" id="min_value" name="min_value" value="<?=$min_value?>"><br><br>
-                    <label for="max_value">До</label>
-                    <input type="number" id="max_value" name="max_value" value="<?=$max_value?>"><br><br>
-                    <input type="hidden" name="block" value="<?=htmlspecialchars($blockDBName)?>">
-                    <button type="submit">Применить</button>
-                    <a href="./categoryMore.php?block=<?=urlencode($blockDBName)?>" class="reset-btn">Сбросить</a>
-                </form>
+            <div class="name">
+                <h1><?=htmlspecialchars($pageTitle)?></h1>
             </div>
-            
+
             <div class="product_grid">
-                <?php foreach($products as $product): ?>
-                <div class="card">
-                    <div class="img_product">
-                        <a href="./product.php?id=<?=$product['id']?>">
-                            <img src="../image/image_product/<?=htmlspecialchars($product['files'])?>" alt="<?=htmlspecialchars($product['title'])?>">
-                        </a>
-                    </div>
-                    <div class="price">
-                        <a href="./product.php?id=<?=$product['id']?>"><h2><?=htmlspecialchars($product['title'])?></h2></a> 
-                        <p><?=htmlspecialchars($product['price'])?> ₽</p>
-                    </div>
-                    <div class="button">
-                        <div class="bascet">
+                <?php if(empty($products)): ?>
+                    <p class="no-products">Товары в этой категории отсутствуют</p>
+                <?php else: ?>
+                    <?php foreach($products as $product): ?>
+                    <div class="card">
+                        <div class="img_product">
+                            <a href="/pages/product.php?id=<?=$product['id']?>">
+                                <img src="/image/image_product/<?=htmlspecialchars($product['files'])?>" 
+                                    alt="<?=htmlspecialchars($product['title'])?>">
+                            </a>
+                        </div>
+                        <div class="price">
+                            <a href="/pages/product.php?id=<?=$product['id']?>">
+                                <h3><?=htmlspecialchars($product['title'])?></h3>
+                            </a> 
+                            <p><?=htmlspecialchars($product['price'])?> ₽</p>
+                        </div>
+                        <div class="button">
                             <?php if(isset($_SESSION['login'])): ?>
-                                <a href="../core/Controllers/PostController.php?action=AddToBasket&product_id=<?=$product['id']?>">добавить в корзину</a>
+                                <div class="bascet">
+                                    <a href="/core/Controllers/PostController.php?action=AddToBasket&product_id=<?=$product['id']?>">
+                                        В корзину
+                                    </a>
+                                </div>
+                                <div class="like">
+                                    <a href="/core/Controllers/PostController.php?action=AddToFavourites&product_id=<?=$product['id']?>&return_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
+                                        <img src="/image/Image_system/icons8-сердце-50 (2).png" alt="В избранное">
+                                    </a>
+                                </div>
                             <?php else: ?>
-                                <a href="./login.php">добавить в корзину</a>
+                                <div class="bascet">
+                                    <a href="/pages/login.php">В корзину</a>
+                                </div>
+                                <div class="like">
+                                    <a href="/pages/login.php">
+                                        <img src="/image/Image_system/icons8-сердце-50 (2).png" alt="В избранное">
+                                    </a>
+                                </div>
                             <?php endif; ?>
                         </div>
-                        <div class="like">
-                            <?php if(isset($_SESSION['login'])): ?>
-                                <a href="../core/Controllers/PostController.php?action=AddToFavourites&product_id=<?=$product['id']?>&return_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
-                                    <img src="../image/Image_system/icons8-сердце-50 (2).png" alt="Избранное">
-                                </a>
-                            <?php else: ?>
-                                <a href="./login.php">
-                                    <img src="../image/Image_system/icons8-сердце-50 (2).png" alt="Избранное">
-                                </a>
-                            <?php endif; ?>
-                        </div>
+                        
+                        <?php if(isset($_SESSION['role']) && $_SESSION['role'] == "admin"): ?>
+                            <div class="admin_buttons">
+                                <a href="/core/Controllers/PostController.php?action=editProduct&id=<?=$product['id']?>" 
+                                class="edit_btn">Редактировать</a>
+                                <a href="/core/Controllers/PostController.php?action=deleteProduct&id=<?=$product['id']?>" 
+                                class="delete_btn" 
+                                onclick="return confirm('Удалить этот товар?')">Удалить</a>
+                            </div>
+                        <?php endif; ?>
                     </div>
-                    
-                    <?php if(isset($_SESSION['role']) && $_SESSION['role'] == "admin"): ?>
-                        <div class="admin_buttons">
-                            <a href="../core/Controllers/PostController.php?action=editProduct&id=<?=$product['id']?>" class="edit_btn">Редактировать</a>
-                            <a href="../core/Controllers/PostController.php?action=deleteProduct&id=<?=$product['id']?>" class="delete_btn" onclick="return confirm('Вы уверены, что хотите удалить этот товар?')">Удалить</a>
-                        </div>
-                    <?php endif; ?>
-                </div>
-                <?php endforeach; ?>  
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </section>
     </main>
 
-    <footer>
-        <div class="footer">
-            <div class="footer-section">
-                <h3>О компании</h3>
-                <a href="./about.html">О нас</a>
-                <a href="./contact.html">Контакты</a>
-            </div>
-            <div class="footer-section">
-                <h3>Помощь</h3>
-                <a href="./payment.html">Оплата и доставка</a>
-                <a href="./Refund.html">Возврат и обмен</a>
-            </div>
-            <div class="footer-section">
-                <h3>Соцсети</h3>
-                <a href="#"><img src="../image/Image_system/icons8-vk-50.png" alt="Вконтакте"></a>
-                <a href="#"><img src="../image/Image_system/icons8-телеграм-50.png" alt="Телеграм"></a>
-            </div>
-        </div>
-        <div class="copyright">
-            <p>&copy; 2023 Laputa. Все права защищены.</p>
-        </div>
-    </footer>
+    
 
     <script src="../scripts/theme.js"></script>
     <script src="../scripts/script.js"></script>
