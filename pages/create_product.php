@@ -89,7 +89,7 @@
 можно добавить колонку с хештегом на выбор в какой инфо блок выложить товар
 так же редактировку к нему -->
 
-<footer>
+<!-- <footer>
     <div class="footer">
         <div class="nav_item">
             <a href="../login.php"><img src="../image/Image_system/icons8-человек-48.png" alt=""></a>
@@ -116,7 +116,7 @@
             <a href="./basket.php">Корзина</a>
         </div>
     </div>
-</footer>
+</footer> -->
 
 
 </body>

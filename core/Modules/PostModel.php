@@ -101,37 +101,22 @@ class PostModel{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-
-    static function AddToBasket($product_id, $user_id){
-
-        $conn = DB::getConnection();
-
-        $query = $conn->prepare("INSERT INTO `basket` (product_id, user_id) values (?,?)");
-
-        $query->execute([$product_id, $user_id]);
-
-    }
-
-    static function AddToFavourites($product_id, $user_id){
-
-        $conn = DB::getConnection();
-
-        $query = $conn->prepare("INSERT INTO `favourites` (product_id, user_id) values (?,?)");
-
-        $query->execute([$product_id, $user_id]);
-    }
-
-        static function AddToBascet($product_id, $user_id){
-
-        $conn = DB::getConnection();
-
-        $query = $conn->prepare("INSERT INTO `bascet` (product_id, user_id) values (?,?)");
-
-        $query->execute([$product_id, $user_id]);
-    }
-
-
     static function deleteProduct($id){
+
+        $conn = DB::getConnection();
+
+        $query = $conn->prepare("DELETE FROM `products` WHERE id = ?");
+
+        $query->execute([$id]);
+
+    }
+
+
+}
+
+class Basket{
+
+    static function deleteBasketProduct($id){
 
         $conn = DB::getConnection();
 
@@ -140,6 +125,21 @@ class PostModel{
         $query->execute([$id]);
 
     }
+
+    static function AddToBasket($product_id, $user_id){
+
+        $conn = DB::getConnection();
+
+        $query = $conn->prepare("INSERT INTO `basket` (product_id, user_id) values (?,?)");
+
+        $query->execute([$product_id, $user_id]);
+    }
+
+}
+
+
+
+class Favourites{
 
     static function deleteFavourites($id){
 
@@ -151,18 +151,25 @@ class PostModel{
 
     }
 
-    static function editProduct(){
+    static function AddToFavouriteFromBasket($product_id, $user_id){
 
-        $conn = DB::getConnection($title, $descr, $price, $category, $info_block, $id);
+        $conn = DB::getConnection();
 
-        $query = $conn->prepare("UPDATE PrePosts SET `title` = ?, `descr` = ?, `price` = ?, `category` = ?, `info_block` = ? WHERE `id` = ?");
-        $query->execute([$title, $descr, $price, $category, $info_block, $id]);
+        $query = $conn->prepare("INSERT INTO `favourites` (product_id, user_id) values (?,?)");
 
+        $query->execute([$product_id, $user_id]);
+    }
+
+    static function AddToFavourites($product_id, $user_id){
+
+        $conn = DB::getConnection();
+
+        $query = $conn->prepare("INSERT INTO `favourites` (product_id, user_id) values (?,?)");
+
+        $query->execute([$product_id, $user_id]);
     }
 
 }
-
-
 
 class slider{
         

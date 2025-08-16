@@ -53,7 +53,18 @@ if($_GET['action']=="deleteProduct"){
 
     PostModel::deleteProduct($id);
 
-    Header("Location: /basket.php");
+    Header("Location: ../../index.php");
+
+}
+if($_GET['action']=="deleteBasketProduct"){
+
+    session_start();
+
+    isset($_GET['id']) ? $id = trim($_GET['id']) : Header("Location: /");;
+
+    Basket::deleteBasketProduct($id);
+
+    Header("Location: ../../pages/basket.php");
 
 }
 elseif($_GET['action']=="AddToBasket"){
@@ -64,7 +75,7 @@ elseif($_GET['action']=="AddToBasket"){
 
     $product_id = $_GET['product_id'];
     
-    PostModel::AddToBasket($product_id,$userid);
+    Basket::AddToBasket($product_id,$userid);
 
     Header("Location: /");
 
@@ -80,9 +91,9 @@ if($_GET['action']=="deleteFavourites"){
 
     isset($_GET['id']) ? $id = trim($_GET['id']) : Header("Location: /");;
 
-    PostModel::deleteFavourites($id);
+    Favourites::deleteFavourites($id);
 
-    Header("Location: /favourites.php");
+    Header("Location: ../../pages/favourites.php");
 
 }
 
@@ -94,11 +105,23 @@ elseif($_GET['action']=="AddToFavourites"){
 
     $product_id = $_GET['product_id'];
     
-    PostModel::AddToFavourites($product_id,$userid);
+    Favourites::AddToFavourites($product_id,$userid);
 
     $return_url = $_GET['return_url'];
     Header("Location: $return_url");
 
+}
+elseif($_GET['action']=="AddToFavouriteFromBasket"){
+
+    session_start();
+    
+    $userid = $_SESSION['id'];
+
+    $product_id = $_GET['product_id'];
+    
+    Favourites::AddToFavouriteFromBasket($product_id,$userid);
+
+    Header("Location: ../../pages/basket.php");
 }
 elseif($_GET['action']=="addSlider"){
 
@@ -128,23 +151,6 @@ elseif($_GET['action']=="addInfoBlock"){
 
     Header("Location: ../../index.php");
 }
-elseif($_GET['action']=="editProduct"){
 
-    $title = $_POST['title'];
-
-    $descr = $_POST['descr'];
-
-    $price = $_POST['price'];
-
-    $category = $_POST['category'];
-
-    $info_block = $_POST['info_block'];
-
-    $id = $_GET['id'];
-
-    PostModel::editProduct($title, $descr, $price, $category, $info_block, $id);
-
-    header("Location: ../../pages/preNews.php");
-}
 
 
