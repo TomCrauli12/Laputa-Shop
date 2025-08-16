@@ -11,7 +11,14 @@ class PostModel{
 
         $query->execute([$id]);
 
+    }
+    static function editProduct($title, $descr, $price, $category, $categorytwo, $info_block, $id){
 
+        $conn = DB::getConnection();
+
+        $query = $conn->prepare("UPDATE `products` SET `title` = ?, `descr` = ?, `price` = ?, `category` = ?, `categorytwo` = ?, `info_block` = ? WHERE `id` = ?");
+        
+        $query->execute([$title, $descr, $price, $category, $categorytwo, $info_block, $id]);
     }
 
     static function createProduct($title, $descr, $price, $category, $files, $info_block, $files_2, $files_3, $files_4, $files_5) {
@@ -114,6 +121,8 @@ class PostModel{
 
 }
 
+
+
 class Basket{
 
     static function deleteBasketProduct($id){
@@ -170,6 +179,8 @@ class Favourites{
     }
 
 }
+
+
 
 class slider{
         

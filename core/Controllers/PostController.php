@@ -97,6 +97,27 @@ if($_GET['action']=="deleteFavourites"){
 
 }
 
+elseif($_GET['action']=="editProduct"){
+
+    $title = $_POST['title'];
+
+    $descr = $_POST['descr'];
+
+    $price = $_POST['price'];
+
+    $category = $_POST['category'];
+
+    $categorytwo = $_POST['categorytwo'];
+
+    $info_block = $_POST['info_block'];
+
+    $id = $_GET['id'];
+
+    PostModel::editProduct($title, $descr, $price, $category, $categorytwo, $info_block, $id);
+    
+    Header("Location: ../../index.php");
+}
+
 elseif($_GET['action']=="AddToFavourites"){
 
     session_start();

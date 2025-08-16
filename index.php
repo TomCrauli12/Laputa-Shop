@@ -211,9 +211,9 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
                         
                         <?php if(isset($_SESSION['role']) && $_SESSION['role'] == "admin"): ?>
                             <div class="admin_buttons">
-                                <a href="/core/Controllers/PostController.php?action=editProduct&id=<?=$product['id']?>" 
+                                <a href="./pages/editProduct.php?id=<?=$product['id']?>" 
                                    class="edit_btn">Редактировать</a>
-                                <a href="/core/Controllers/PostController.php?action=delet eProduct&id=<?=$product['id']?>" 
+                                <a href="/core/Controllers/PostController.php?action=deleteProduct&id=<?=$product['id']?>" 
                                    class="delete_btn" 
                                    onclick="return confirm('Удалить этот товар?')">Удалить</a>
                             </div>
