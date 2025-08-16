@@ -48,13 +48,6 @@
     <br>
     <br>
 
-    <label for="categorytwo">Выбрать дополнительную категорию</label><br>
-        <?php foreach($allCategory as $key): ?>
-        <input name="category" type="radio" value="<?=$key['categoryBDName']?>"><?=$key['categoryName']?><br>
-    <?php endforeach; ?>
-    <br>
-    <br>
-
     <label for="info_block">Добавить в информациооный блок</label><br>
         <?php foreach($allInfoblock as $key): ?>
         <input name="info_block" type="radio" value="<?=$key['infoBlockDBName']?>"><?=$key['infoBlockName']?><br>

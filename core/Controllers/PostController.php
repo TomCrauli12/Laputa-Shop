@@ -17,7 +17,6 @@ elseif($_GET['action'] == "createProduct") {
         $descr = $_POST['descr'];
         $price = $_POST['price'];
         $category = $_POST['category'];
-        $categorytwo = $_POST['categorytwo'] ?? '';
         $info_block = $_POST['info_block'] ?? ''; 
 
         PostModel::createProduct(
@@ -26,7 +25,6 @@ elseif($_GET['action'] == "createProduct") {
             $price,
             $category,
             $_FILES['files'],
-            $categorytwo,
             $info_block,
             $_FILES['files_2'] ?? null,
             $_FILES['files_3'] ?? null,

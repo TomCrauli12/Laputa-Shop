@@ -14,7 +14,7 @@ class PostModel{
 
     }
 
-    static function createProduct($title, $descr, $price, $category, $files, $categorytwo, $info_block, $files_2, $files_3, $files_4, $files_5) {
+    static function createProduct($title, $descr, $price, $category, $files, $info_block, $files_2, $files_3, $files_4, $files_5) {
         $conn = DB::getConnection();
 
         $uploadedFileName = '';
@@ -50,7 +50,7 @@ class PostModel{
             }
         }
         $query = $conn->prepare("INSERT INTO `products` 
-            (title, descr, price, category, files, categorytwo, info_block, files_2, files_3, files_4, files_5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            (title, descr, price, category, files, info_block, files_2, files_3, files_4, files_5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         
         $query->execute([
             $title,
@@ -58,7 +58,6 @@ class PostModel{
             $price,
             $category,
             $uploadedFileName,
-            $categorytwo,
             $info_block,
             $uploadedFiles[0],
             $uploadedFiles[1],
