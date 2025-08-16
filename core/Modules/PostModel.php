@@ -14,58 +14,58 @@ class PostModel{
 
     }
 
-static function createProduct($title, $descr, $price, $category, $files, $categorytwo, $info_block, $files_2, $files_3, $files_4, $files_5) {
-    $conn = DB::getConnection();
+    static function createProduct($title, $descr, $price, $category, $files, $categorytwo, $info_block, $files_2, $files_3, $files_4, $files_5) {
+        $conn = DB::getConnection();
 
-    $uploadedFileName = '';
-    if (isset($_FILES['files']) && $_FILES['files']['error'] === UPLOAD_ERR_OK) {
-        $ext = pathinfo($_FILES['files']['name'], PATHINFO_EXTENSION);
-        $uploadedFileName = uniqid('', true) . '.' . $ext;
-        $uploadPath = '../../image/image_product/' . $uploadedFileName;
-        
-        if (!move_uploaded_file($_FILES['files']['tmp_name'], $uploadPath)) {
-            throw new Exception('Ошибка загрузки главного изображения');
-        }
-    } else {
-        throw new Exception('Главное изображение обязательно для загрузки');
-    }
-    $uploadedFiles = ['', '', '', ''];
-    
-    $additionalFiles = [
-        'files_2' => 0,
-        'files_3' => 1,
-        'files_4' => 2,
-        'files_5' => 3
-    ];
-    
-    foreach ($additionalFiles as $fileKey => $index) {
-        if (isset($_FILES[$fileKey]) && $_FILES[$fileKey]['error'] === UPLOAD_ERR_OK) {
-            $ext = pathinfo($_FILES[$fileKey]['name'], PATHINFO_EXTENSION);
-            $filename = uniqid('', true) . '.' . $ext;
-            $uploadPath = '../../image/image_product/' . $filename;
+        $uploadedFileName = '';
+        if (isset($_FILES['files']) && $_FILES['files']['error'] === UPLOAD_ERR_OK) {
+            $ext = pathinfo($_FILES['files']['name'], PATHINFO_EXTENSION);
+            $uploadedFileName = uniqid('', true) . '.' . $ext;
+            $uploadPath = '../../image/image_product/' . $uploadedFileName;
             
-            if (move_uploaded_file($_FILES[$fileKey]['tmp_name'], $uploadPath)) {
-                $uploadedFiles[$index] = $filename;
+            if (!move_uploaded_file($_FILES['files']['tmp_name'], $uploadPath)) {
+                throw new Exception('Ошибка загрузки главного изображения');
+            }
+        } else {
+            throw new Exception('Главное изображение обязательно для загрузки');
+        }
+        $uploadedFiles = ['', '', '', ''];
+        
+        $additionalFiles = [
+            'files_2' => 0,
+            'files_3' => 1,
+            'files_4' => 2,
+            'files_5' => 3
+        ];
+    
+        foreach ($additionalFiles as $fileKey => $index) {
+            if (isset($_FILES[$fileKey]) && $_FILES[$fileKey]['error'] === UPLOAD_ERR_OK) {
+                $ext = pathinfo($_FILES[$fileKey]['name'], PATHINFO_EXTENSION);
+                $filename = uniqid('', true) . '.' . $ext;
+                $uploadPath = '../../image/image_product/' . $filename;
+                
+                if (move_uploaded_file($_FILES[$fileKey]['tmp_name'], $uploadPath)) {
+                    $uploadedFiles[$index] = $filename;
+                }
             }
         }
+        $query = $conn->prepare("INSERT INTO `products` 
+            (title, descr, price, category, files, categorytwo, info_block, files_2, files_3, files_4, files_5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        
+        $query->execute([
+            $title,
+            $descr,
+            $price,
+            $category,
+            $uploadedFileName,
+            $categorytwo,
+            $info_block,
+            $uploadedFiles[0],
+            $uploadedFiles[1],
+            $uploadedFiles[2],
+            $uploadedFiles[3]
+        ]);
     }
-    $query = $conn->prepare("INSERT INTO `products` 
-        (title, descr, price, category, files, categorytwo, info_block, files_2, files_3, files_4, files_5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    
-    $query->execute([
-        $title,
-        $descr,
-        $price,
-        $category,
-        $uploadedFileName,
-        $categorytwo,
-        $info_block,
-        $uploadedFiles[0],
-        $uploadedFiles[1],
-        $uploadedFiles[2],
-        $uploadedFiles[3]
-    ]);
-}
 
     static function getCategory($category_name){
 
@@ -152,7 +152,18 @@ static function createProduct($title, $descr, $price, $category, $files, $catego
 
     }
 
+    static function editProduct(){
+
+        $conn = DB::getConnection($title, $descr, $price, $category, $info_block, $id);
+
+        $query = $conn->prepare("UPDATE PrePosts SET `title` = ?, `descr` = ?, `price` = ?, `category` = ?, `info_block` = ? WHERE `id` = ?");
+        $query->execute([$title, $descr, $price, $category, $info_block, $id]);
+
+    }
+
 }
+
+
 
 class slider{
         
@@ -189,6 +200,8 @@ class slider{
     }
 
 }
+
+
 
 class category{
 
@@ -235,6 +248,9 @@ class category{
 
 
 }
+
+
+
 class infoBlock{
 
     static function addInfoBlock($infoBlockName, $infoBlockDBName){

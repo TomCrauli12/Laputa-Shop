@@ -130,5 +130,23 @@ elseif($_GET['action']=="addInfoBlock"){
 
     Header("Location: ../../index.php");
 }
+elseif($_GET['action']=="editProduct"){
+
+    $title = $_POST['title'];
+
+    $descr = $_POST['descr'];
+
+    $price = $_POST['price'];
+
+    $category = $_POST['category'];
+
+    $info_block = $_POST['info_block'];
+
+    $id = $_GET['id'];
+
+    PostModel::editProduct($title, $descr, $price, $category, $info_block, $id);
+
+    header("Location: ../../pages/preNews.php");
+}
 
 

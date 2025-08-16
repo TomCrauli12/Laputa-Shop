@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Авг 01 2025 г., 22:15
+-- Время создания: Авг 16 2025 г., 18:01
 -- Версия сервера: 10.3.13-MariaDB
 -- Версия PHP: 7.1.22
 
@@ -44,6 +44,27 @@ INSERT INTO `basket` (`id`, `product_id`, `user_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `category`
+--
+
+CREATE TABLE `category` (
+  `id` int(11) NOT NULL,
+  `categoryName` varchar(250) NOT NULL,
+  `categoryBDName` varchar(250) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `category`
+--
+
+INSERT INTO `category` (`id`, `categoryName`, `categoryBDName`) VALUES
+(1, 'Новые товары', 'newPoduct'),
+(2, 'Манга', 'manga'),
+(3, 'Скидки', 'sale');
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `favourites`
 --
 
@@ -60,7 +81,30 @@ CREATE TABLE `favourites` (
 INSERT INTO `favourites` (`id`, `product_id`, `user_id`) VALUES
 (12, '33', '3'),
 (13, '35', '3'),
-(27, '35', '1');
+(27, '35', '1'),
+(32, '40', '1'),
+(33, '3', '1');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `infoblock`
+--
+
+CREATE TABLE `infoblock` (
+  `id` int(11) NOT NULL,
+  `infoBlockName` varchar(250) NOT NULL,
+  `infoBlockDBName` varchar(250) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `infoblock`
+--
+
+INSERT INTO `infoblock` (`id`, `infoBlockName`, `infoBlockDBName`) VALUES
+(1, 'Новые товары', 'NewProduct'),
+(2, 'Распродажа', 'sale'),
+(3, 'Спецзаказы', 'SpecialOrders');
 
 -- --------------------------------------------------------
 
@@ -88,16 +132,9 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `title`, `descr`, `price`, `category`, `files`, `categorytwo`, `info_block`, `files_2`, `files_3`, `files_4`, `files_5`) VALUES
-(33, 'Новый товар манга', 'йцу', 1200, 'йцу', '_uq7wWEJAHwl8KAeZtXW2kWIqKvtHTErFlmjX7-8lMSo0aZCoWyq_fnDwELMYMjWG9JpTGePbVCiFl1H8Gu37Knf.jpg', 'йцу', 'Новые товары', '', '', '', ''),
-(34, 'Скидка фигурка', 'манга ', 1000, '2133', 'pA6qR2sbP9w.jpg', 'йцу', 'Скидки', '', '', '', ''),
-(35, 'Предзаказ брелка ', '123', 700, 'манга', 'Sb5YaG61mFxjt1vRw_0h5y-PErKyOgMSySg8Bq3Dr02QC9976Ili09uD-6Z0tikDNV8ciXskaBYqVtJlkk8mGbur.jpg', 'манга', 'Предзаказы', '', '', '', ''),
-(36, 'Распродажа Хаори', 'хаори что то там ', 1800, 'Одежда ', 'UB5K6dStX1EtWs8dQLkA8xvLFTFGO1-5ma7p7sh5pVj4zkzVsTsG_ZvrzVrbF-Mw-Ye-x2v7B-Vc61JILt7RYs4t.jpg', 'Хаори', 'Распродажа', '', '', '', ''),
-(37, 'Евангелион том 1', 'Манга Евангелион', 1200, 'Манга', 'UB5K6dStX1EtWs8dQLkA8xvLFTFGO1-5ma7p7sh5pVj4zkzVsTsG_ZvrzVrbF-Mw-Ye-x2v7B-Vc61JILt7RYs4t.jpg', 'Манга', NULL, '', '', '', ''),
-(38, '123', '123', 123, NULL, '_uq7wWEJAHwl8KAeZtXW2kWIqKvtHTErFlmjX7-8lMSo0aZCoWyq_fnDwELMYMjWG9JpTGePbVCiFl1H8Gu37Knf.jpg', NULL, 'Распродажа', '', '', '', ''),
-(39, '123123', '12312', 123321, NULL, 'Sb5YaG61mFxjt1vRw_0h5y-PErKyOgMSySg8Bq3Dr02QC9976Ili09uD-6Z0tikDNV8ciXskaBYqVtJlkk8mGbur.jpg', NULL, 'Распродажа', '', '', '', ''),
-(40, 'йцуйц', 'йцуцйуйцу', 123, NULL, 'pA6qR2sbP9w.jpg', NULL, 'Распродажа', '', '', '', ''),
-(41, 'asd', 'asd', 123, NULL, '_uq7wWEJAHwl8KAeZtXW2kWIqKvtHTErFlmjX7-8lMSo0aZCoWyq_fnDwELMYMjWG9JpTGePbVCiFl1H8Gu37Knf.jpg', NULL, 'Распродажа', '', '', '', ''),
-(42, 'qweqwe', 'qweqwe', 123, NULL, '_uq7wWEJAHwl8KAeZtXW2kWIqKvtHTErFlmjX7-8lMSo0aZCoWyq_fnDwELMYMjWG9JpTGePbVCiFl1H8Gu37Knf.jpg', NULL, 'Распродажа', '', '', '', '');
+(1, 'Новый товар', 'Описание нового товара', 1200, 'Новые товары', '6890c04c9324d5.17226150.jpg', '', 'Новые товары', '6890c04c934163.60925905.jpg', '6890c04c9357a1.11513182.jpg', '', ''),
+(2, 'Манга (новый товар)', 'Манга описание', 800, 'manga', '6890c088e048e2.63108987.jpg', '', 'NewProduct', '6890c088e05bc5.74440025.jpg', '6890c088e06ab7.55591184.jpg', '', ''),
+(3, 'манга(распродажа)', 'манга описание', 700, 'manga', '6890df155d40a5.10097430.jpg', '', 'sale', '6890df155d5c33.82655800.jpg', '6890df155d7519.50397276.jpg', '', '');
 
 -- --------------------------------------------------------
 
@@ -122,23 +159,24 @@ INSERT INTO `sliders` (`id`, `imageslider`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `user`
+-- Структура таблицы `users`
 --
 
-CREATE TABLE `user` (
+CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `login` varchar(100) DEFAULT NULL,
+  `name` varchar(250) NOT NULL,
   `password` varchar(100) DEFAULT NULL,
   `role` varchar(250) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 --
--- Дамп данных таблицы `user`
+-- Дамп данных таблицы `users`
 --
 
-INSERT INTO `user` (`id`, `login`, `password`, `role`) VALUES
-(1, 'qw', 'qw', ''),
-(3, 'as', 'as', '');
+INSERT INTO `users` (`id`, `login`, `name`, `password`, `role`) VALUES
+(1, 'qw', 'qw', '006d2143154327a64d86a264aea225f3', 'admin'),
+(2, 'user', 'user', 'ee11cbb19052e40b07aac0ca060c23ee', 'user');
 
 --
 -- Индексы сохранённых таблиц
@@ -151,9 +189,21 @@ ALTER TABLE `basket`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Индексы таблицы `category`
+--
+ALTER TABLE `category`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Индексы таблицы `favourites`
 --
 ALTER TABLE `favourites`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `infoblock`
+--
+ALTER TABLE `infoblock`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -169,9 +219,9 @@ ALTER TABLE `sliders`
   ADD PRIMARY KEY (`id`);
 
 --
--- Индексы таблицы `user`
+-- Индексы таблицы `users`
 --
-ALTER TABLE `user`
+ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -185,16 +235,28 @@ ALTER TABLE `basket`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
+-- AUTO_INCREMENT для таблицы `category`
+--
+ALTER TABLE `category`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT для таблицы `favourites`
 --
 ALTER TABLE `favourites`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+
+--
+-- AUTO_INCREMENT для таблицы `infoblock`
+--
+ALTER TABLE `infoblock`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `sliders`
@@ -203,10 +265,10 @@ ALTER TABLE `sliders`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT для таблицы `user`
+-- AUTO_INCREMENT для таблицы `users`
 --
-ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
