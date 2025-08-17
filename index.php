@@ -7,9 +7,50 @@ require_once __DIR__ . '/core/Modules/PostModel.php';
 
 $conn = DB::getConnection();
 
+// Обработка избранного ДО любого вывода
+if (isset($_GET['action']) && $_GET['action'] === 'toggle_favourite' && isset($_SESSION['id'])) {
+    $product_id = (int)($_GET['product_id'] ?? 0);
+    
+    if ($product_id > 0) {
+        try {
+            // Проверяем наличие товара в избранном
+            $stmt = $conn->prepare("SELECT id FROM favourites WHERE user_id = ? AND product_id = ?");
+            $stmt->execute([$_SESSION['id'], $product_id]);
+            $favourite = $stmt->fetch();
+
+            if ($favourite) {
+                // Удаляем из избранного
+                $conn->prepare("DELETE FROM favourites WHERE id = ?")->execute([$favourite['id']]);
+            } else {
+                // Добавляем в избранное
+                $conn->prepare("INSERT INTO favourites (user_id, product_id) VALUES (?, ?)")
+                     ->execute([$_SESSION['id'], $product_id]);
+            }
+
+            // Редирект на предыдущую страницу без параметров
+            $redirect_url = isset($_SERVER['HTTP_REFERER']) ? strtok($_SERVER['HTTP_REFERER'], '?') : '/index.php';
+            header("Location: " . $redirect_url);
+            exit;
+        } catch (PDOException $e) {
+            error_log("Ошибка: " . $e->getMessage());
+        }
+    }
+}
+
+// Получаем список избранных товаров
+$favourites = [];
+if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
+    try {
+        $stmt = $conn->prepare("SELECT product_id FROM favourites WHERE user_id = ?");
+        $stmt->execute([$_SESSION['id']]);
+        $favourites = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+    } catch (PDOException $e) {
+        error_log("Ошибка: " . $e->getMessage());
+    }
+}
+
 // Получаем слайдеры
 $sliders = $conn->query('SELECT * FROM sliders')->fetchAll();
-
 
 // Получаем информационные блоки и их товары
 $infoBlocks = $conn->query('SELECT * FROM infoblock')->fetchAll(PDO::FETCH_ASSOC);
@@ -71,7 +112,6 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
             <a href="#"><img src="/image/Image_system/icons8-телеграм-50.png" alt="Телеграм"></a>
         </div>
     </nav>
-
 
     <header>
         <div class="header_left">
@@ -140,7 +180,6 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </header>
     
-
     <section class="slider">
         <div class="slides-container">
             <?php foreach($sliders as $slide): ?>
@@ -186,15 +225,17 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
                             <p><?=htmlspecialchars($product['price'])?> ₽</p>
                         </div>
                         <div class="button">
-                            <?php if(isset($_SESSION['login'])): ?>
+                            <?php if(isset($_SESSION['login']) && isset($_SESSION['id'])): ?>
                                 <div class="bascet">
                                     <a href="/core/Controllers/PostController.php?action=AddToBasket&product_id=<?=$product['id']?>">
                                         В корзину
                                     </a>
                                 </div>
                                 <div class="like">
-                                    <a href="/core/Controllers/PostController.php?action=AddToFavourites&product_id=<?=$product['id']?>&return_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
-                                        <img src="/image/Image_system/icons8-сердце-50 (2).png" alt="В избранное">
+                                    <?php $isFavourite = in_array($product['id'], $favourites); ?>
+                                    <a href="/index.php?action=toggle_favourite&product_id=<?=$product['id']?>">
+                                        <img src="/image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
+                                            alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
                                     </a>
                                 </div>
                             <?php else: ?>
@@ -203,7 +244,7 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
                                 </div>
                                 <div class="like">
                                     <a href="/pages/login.php">
-                                        <img src="/image/Image_system/icons8-сердце-50 (2).png" alt="В избранное">
+                                        <img src="/image/Image_system/icons8-heart-50.png" alt="В избранное">
                                     </a>
                                 </div>
                             <?php endif; ?>
@@ -229,12 +270,11 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
         <?php endforeach; ?>
     </main>
 
-
     <footer>
         <div class="footer-content">
             <div class="footer-section">
                 <h3>Магазин</h3>
-                <?php foreach(array_slice($categories, 0, 3) as $category): ?>
+                <?php foreach(array_slice($category, 0, 3) as $category): ?>
                     <a href="/pages/category.php?name=<?=urlencode($category['categoryName'])?>">
                         <?=htmlspecialchars($category['categoryName'])?>
                     </a>
@@ -261,8 +301,7 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </footer>
 
-
-<script src="/scripts/script.js"></script>
-<script src="./scripts/theme.js"></script>
+    <script src="/scripts/script.js"></script>
+    <script src="./scripts/theme.js"></script>
 </body>
 </html>
