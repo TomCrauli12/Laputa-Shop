@@ -22,7 +22,7 @@ $listcategory = $conn->query('SELECT * FROM category')->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style/static.css">
-    <link rel="stylesheet" href="../style/favourites.css">
+    <link rel="stylesheet" href="../style/style.css">
     <link rel="stylesheet" href="../style/medea.css">
     <title>Laputa | Избранное</title>
 </head>

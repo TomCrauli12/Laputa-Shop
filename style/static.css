@@ -1,3 +1,6 @@
+/* ===== ОБНОВЛЕННЫЙ STATIC.CSS - ТОЛЬКО УНИКАЛЬНЫЕ СТИЛИ ===== */
+
+/* Базовые стили - только если их нет в других файлах */
 * {
     padding: 0;
     margin: 0;
@@ -20,6 +23,36 @@ p, h1, h2, h3, h4, h5 {
     color: var(--text-color);
 }
 
+/* Переменные для тем - централизованные */
+:root {
+    /* Светлая тема (по умолчанию) */
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --header-bg: rgba(168, 168, 168, 0.274);
+    --card-bg: #ffffff;
+    --card-border: #ccc;
+    --search-bg: rgba(0, 0, 0, 0.2);
+    --search-border: #fff;
+    --button-bg: #dd1414;
+    --button-text: #ffffff;
+    --icon-filter: none;
+}
+
+[data-theme="dark"] {
+    /* Темная тема */
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --header-bg: #1e1e1e;
+    --card-bg: #2d2d2d;
+    --card-border: #444;
+    --search-bg: rgba(255, 255, 255, 0.1);
+    --search-border: #555;
+    --button-bg: #b31010;
+    --button-text: #f0f0f0;
+    --icon-filter: invert(1);
+}
+
+/* Уникальные стили для шапки */
 .sean {
     display: flex;
     justify-content: center;
@@ -65,10 +98,9 @@ p, h1, h2, h3, h4, h5 {
     cursor: pointer;
     transition: background-color 0.3s;
     white-space: nowrap;
-}   
+}
 
-
-/* ===== Шапка и навигация ===== */
+/* Уникальные стили для навигации */
 .navbar, header {
     display: flex;
     justify-content: space-between;
@@ -108,11 +140,7 @@ p, h1, h2, h3, h4, h5 {
     filter: var(--icon-filter);
 }
 
-.contact {
-    display: flex;
-}
-
-/* Бургер-меню для мобильных */
+/* Бургер-меню */
 .burger-checkbox {
     position: relative;
     display: flex;
@@ -187,11 +215,10 @@ p, h1, h2, h3, h4, h5 {
     height: 80%;
     background-color: var(--card-bg);
     border: none;
-    border-radius: 0;
+    border-radius: 15px;
     box-shadow: none;
     padding: 20px;
     overflow-y: auto;
-    border-radius: 15px;
 }
 
 .burger-checkbox input[type="checkbox"]:checked ~ .info-block {
@@ -209,7 +236,8 @@ p, h1, h2, h3, h4, h5 {
     font-size: 22px;
     padding: 5px 10px;
 }
-/* ===== Переключатель тем ===== */
+
+/* Переключатель тем */
 .theme-switcher {
     display: flex;
     align-items: center;
@@ -274,31 +302,8 @@ p, h1, h2, h3, h4, h5 {
     transform: translateX(30px);
     background-color: #4d9fec;
 }
-/* ===== Переменные для тем ===== */
-:root {
-    /* Светлая тема (по умолчанию) */
-    --bg-color: #ffffff;
-    --text-color: #000000;
-    --header-bg: rgba(168, 168, 168, 0.274);
-    --card-bg: #ffffff;
-    --card-border: #ccc;
-    --search-bg: rgba(0, 0, 0, 0.2);
-    --search-border: #fff;
-    --button-bg: #dd1414;
-    --button-text: #ffffff;
-    --icon-filter: none;
-}
 
-[data-theme="dark"] {
-    /* Темная тема */
-    --bg-color: #121212;
-    --text-color: #e0e0e0;
-    --header-bg: #1e1e1e;
-    --card-bg: #2d2d2d;
-    --card-border: #444;
-    --search-bg: rgba(255, 255, 255, 0.1);
-    --search-border: #555;
-    --button-bg: #b31010;
-    --button-text: #f0f0f0;
-    --icon-filter: invert(1);
+/* Контакт */
+.contact {
+    display: flex;
 }
