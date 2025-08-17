@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Авг 16 2025 г., 18:01
+-- Время создания: Авг 17 2025 г., 21:06
 -- Версия сервера: 10.3.13-MariaDB
 -- Версия PHP: 7.1.22
 
@@ -33,13 +33,6 @@ CREATE TABLE `basket` (
   `product_id` varchar(100) DEFAULT NULL,
   `user_id` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Дамп данных таблицы `basket`
---
-
-INSERT INTO `basket` (`id`, `product_id`, `user_id`) VALUES
-(15, '35', NULL);
 
 -- --------------------------------------------------------
 
@@ -79,11 +72,7 @@ CREATE TABLE `favourites` (
 --
 
 INSERT INTO `favourites` (`id`, `product_id`, `user_id`) VALUES
-(12, '33', '3'),
-(13, '35', '3'),
-(27, '35', '1'),
-(32, '40', '1'),
-(33, '3', '1');
+(178, '12', '1');
 
 -- --------------------------------------------------------
 
@@ -133,8 +122,7 @@ CREATE TABLE `products` (
 
 INSERT INTO `products` (`id`, `title`, `descr`, `price`, `category`, `files`, `categorytwo`, `info_block`, `files_2`, `files_3`, `files_4`, `files_5`) VALUES
 (1, 'Новый товар', 'Описание нового товара', 1200, 'Новые товары', '6890c04c9324d5.17226150.jpg', '', 'Новые товары', '6890c04c934163.60925905.jpg', '6890c04c9357a1.11513182.jpg', '', ''),
-(2, 'Манга (новый товар)', 'Манга описание', 800, 'manga', '6890c088e048e2.63108987.jpg', '', 'NewProduct', '6890c088e05bc5.74440025.jpg', '6890c088e06ab7.55591184.jpg', '', ''),
-(3, 'манга(распродажа)', 'манга описание', 700, 'manga', '6890df155d40a5.10097430.jpg', '', 'sale', '6890df155d5c33.82655800.jpg', '6890df155d7519.50397276.jpg', '', '');
+(12, 'название (новый товар)', 'описание товара в категории  \"новый товар\"', 123, 'newPoduct', '68a2013e5f34c2.92514278.jpg', NULL, 'NewProduct', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -232,7 +220,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `basket`
 --
 ALTER TABLE `basket`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT для таблицы `category`
@@ -244,7 +232,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT для таблицы `favourites`
 --
 ALTER TABLE `favourites`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=179;
 
 --
 -- AUTO_INCREMENT для таблицы `infoblock`
@@ -256,7 +244,7 @@ ALTER TABLE `infoblock`
 -- AUTO_INCREMENT для таблицы `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT для таблицы `sliders`
