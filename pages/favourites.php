@@ -10,6 +10,8 @@ $conn = DB::getConnection();
 $query = $conn->prepare('select * from favourites where user_id = ?');
 $query->execute([$_SESSION['id']]);
 $favourites = $query->fetchAll();
+
+$listcategory = $conn->query('SELECT * FROM category')->fetchAll();
 ?>
 
 

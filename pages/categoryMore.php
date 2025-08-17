@@ -6,11 +6,66 @@ require_once '../core/Modules/PostModel.php';
 
 $conn = DB::getConnection();
 
+// Обработка избранного ДО любого вывода
+if (isset($_GET['action']) && $_GET['action'] === 'toggle_favourite' && isset($_SESSION['id'])) {
+    $product_id = (int)($_GET['product_id'] ?? 0);
+    
+    if ($product_id > 0) {
+        try {
+            // Проверяем наличие товара в избранном
+            $stmt = $conn->prepare("SELECT id FROM favourites WHERE user_id = ? AND product_id = ?");
+            $stmt->execute([$_SESSION['id'], $product_id]);
+            $favourite = $stmt->fetch();
+
+            if ($favourite) {
+                // Удаляем из избранного
+                $conn->prepare("DELETE FROM favourites WHERE id = ?")->execute([$favourite['id']]);
+            } else {
+                // Добавляем в избранное
+                $conn->prepare("INSERT INTO favourites (user_id, product_id) VALUES (?, ?)")
+                     ->execute([$_SESSION['id'], $product_id]);
+            }
+
+            // Формируем URL для редиректа
+            $redirect_url = $_SERVER['PHP_SELF'];
+            $params = [];
+            
+            // Сохраняем все GET-параметры кроме action и product_id
+            foreach ($_GET as $key => $value) {
+                if ($key !== 'action' && $key !== 'product_id') {
+                    $params[] = $key . '=' . urlencode($value);
+                }
+            }
+            
+            if (!empty($params)) {
+                $redirect_url .= '?' . implode('&', $params);
+            }
+            
+            header("Location: " . $redirect_url);
+            exit;
+        } catch (PDOException $e) {
+            error_log("Ошибка: " . $e->getMessage());
+        }
+    }
+}
+
+// Получаем список избранных товаров
+$favourites = [];
+if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
+    try {
+        $stmt = $conn->prepare("SELECT product_id FROM favourites WHERE user_id = ?");
+        $stmt->execute([$_SESSION['id']]);
+        $favourites = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+    } catch (PDOException $e) {
+        error_log("Ошибка: " . $e->getMessage());
+    }
+}
+
 $listcategory = $conn->query('SELECT * FROM category')->fetchAll();
 
 // Определяем, вызываем ли мы категорию или информационный блок
 if (isset($_GET['name'])) {
-    // Режим категории (как в первом файле)
+    // Режим категории
     $categoryName = $_GET['name'] ?? "Манга";
     $pageTitle = $categoryName;
     
@@ -37,8 +92,9 @@ if (isset($_GET['name'])) {
     
     $hidden_field = '<input type="hidden" name="name" value="'.htmlspecialchars($categoryName).'">';
     $reset_url = './category.php?name='.urlencode($categoryName);
+    $current_page = 'category.php';
 } elseif (isset($_GET['block'])) {
-    // Режим информационного блока (как во втором файле)
+    // Режим информационного блока
     $blockDBName = $_GET['block'] ?? '';
     $name = "Манга"; // Значение по умолчанию
 
@@ -64,6 +120,7 @@ if (isset($_GET['name'])) {
     
     $hidden_field = '<input type="hidden" name="block" value="'.htmlspecialchars($blockDBName).'">';
     $reset_url = './categoryMore.php?block='.urlencode($blockDBName);
+    $current_page = 'categoryMore.php';
 } else {
     header("Location: /index.php");
     exit();
@@ -228,8 +285,19 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
                                     </a>
                                 </div>
                                 <div class="like">
-                                    <a href="/core/Controllers/PostController.php?action=AddToFavourites&product_id=<?=$product['id']?>&return_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
-                                        <img src="/image/Image_system/icons8-сердце-50 (2).png" alt="В избранное">
+                                    <?php $isFavourite = in_array($product['id'], $favourites); ?>
+                                    <?php
+                                    // Формируем URL для избранного с сохранением всех параметров
+                                    $favourite_url = $current_page . '?action=toggle_favourite&product_id=' . $product['id'];
+                                    foreach ($_GET as $key => $value) {
+                                        if ($key !== 'action' && $key !== 'product_id') {
+                                            $favourite_url .= '&' . $key . '=' . urlencode($value);
+                                        }
+                                    }
+                                    ?>
+                                    <a href="<?=$favourite_url?>">
+                                        <img src="/image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
+                                            alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
                                     </a>
                                 </div>
                             <?php else: ?>
@@ -238,7 +306,7 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
                                 </div>
                                 <div class="like">
                                     <a href="/pages/login.php">
-                                        <img src="/image/Image_system/icons8-сердце-50 (2).png" alt="В избранное">
+                                        <img src="/image/Image_system/icons8-heart-50.png" alt="В избранное">
                                     </a>
                                 </div>
                             <?php endif; ?>
@@ -246,7 +314,7 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
                         
                         <?php if(isset($_SESSION['role']) && $_SESSION['role'] == "admin"): ?>
                             <div class="admin_buttons">
-                                <a href="/core/Controllers/PostController.php?action=editProduct&id=<?=$product['id']?>" 
+                                <a href="/pages/editProduct.php?id=<?=$product['id']?>" 
                                 class="edit_btn">Редактировать</a>
                                 <a href="/core/Controllers/PostController.php?action=deleteProduct&id=<?=$product['id']?>" 
                                 class="delete_btn" 
@@ -259,8 +327,6 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
             </div>
         </section>
     </main>
-
-    
 
     <script src="../scripts/theme.js"></script>
     <script src="../scripts/script.js"></script>

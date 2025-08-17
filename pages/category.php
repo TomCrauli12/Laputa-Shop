@@ -6,6 +6,48 @@ require_once '../core/Modules/PostModel.php';
 
 $conn = DB::getConnection();
 
+// Обработка избранного ДО любого вывода
+if (isset($_GET['action']) && $_GET['action'] === 'toggle_favourite' && isset($_SESSION['id'])) {
+    $product_id = (int)($_GET['product_id'] ?? 0);
+    
+    if ($product_id > 0) {
+        try {
+            // Проверяем наличие товара в избранном
+            $stmt = $conn->prepare("SELECT id FROM favourites WHERE user_id = ? AND product_id = ?");
+            $stmt->execute([$_SESSION['id'], $product_id]);
+            $favourite = $stmt->fetch();
+
+            if ($favourite) {
+                // Удаляем из избранного
+                $conn->prepare("DELETE FROM favourites WHERE id = ?")->execute([$favourite['id']]);
+            } else {
+                // Добавляем в избранное
+                $conn->prepare("INSERT INTO favourites (user_id, product_id) VALUES (?, ?)")
+                     ->execute([$_SESSION['id'], $product_id]);
+            }
+
+            // Редирект на предыдущую страницу без параметров
+            $redirect_url = isset($_SERVER['HTTP_REFERER']) ? strtok($_SERVER['HTTP_REFERER'], '?') : '/index.php';
+            header("Location: " . $redirect_url);
+            exit;
+        } catch (PDOException $e) {
+            error_log("Ошибка: " . $e->getMessage());
+        }
+    }
+}
+
+// Получаем список избранных товаров
+$favourites = [];
+if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
+    try {
+        $stmt = $conn->prepare("SELECT product_id FROM favourites WHERE user_id = ?");
+        $stmt->execute([$_SESSION['id']]);
+        $favourites = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+    } catch (PDOException $e) {
+        error_log("Ошибка: " . $e->getMessage());
+    }
+}
+
 $listcategory = $conn->query('SELECT * FROM category')->fetchAll();
 
 // Получаем имя категории из параметра URL
@@ -44,10 +86,6 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
     <link rel="stylesheet" href="../style/static.css">
     <link rel="stylesheet" href="../style/product_grid.css">
     <link rel="stylesheet" href="../style/product_card.css">
-
-    <!-- <link rel="stylesheet" href="../style/category.css"> -->
-    <!-- <link rel="stylesheet" href="../style/style.css"> -->
-    <!-- <link rel="stylesheet" href="../style/medea.css"> -->
     <title>Laputa | <?=htmlspecialchars($categoryName)?></title>
 </head>
 <body>
@@ -149,10 +187,6 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
         </div>
     </header>
 
-
-
-
-
     <main>
         <div class="sorting">
             <h2>Сортировка</h2>
@@ -169,7 +203,6 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
         </div>
         
         <section class="conteiner_product">
-
             <div class="name">
                 <h1><?=htmlspecialchars($categoryName)?></h1>
             </div>
@@ -200,8 +233,10 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
                                     </a>
                                 </div>
                                 <div class="like">
-                                    <a href="/core/Controllers/PostController.php?action=AddToFavourites&product_id=<?=$product['id']?>&return_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
-                                        <img src="/image/Image_system/icons8-сердце-50 (2).png" alt="В избранное">
+                                    <?php $isFavourite = in_array($product['id'], $favourites); ?>
+                                    <a href="/pages/category.php?action=toggle_favourite&product_id=<?=$product['id']?>&name=<?=urlencode($categoryName)?>">
+                                        <img src="/image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
+                                            alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
                                     </a>
                                 </div>
                             <?php else: ?>
@@ -210,7 +245,7 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
                                 </div>
                                 <div class="like">
                                     <a href="/pages/login.php">
-                                        <img src="/image/Image_system/icons8-сердце-50 (2).png" alt="В избранное">
+                                        <img src="/image/Image_system/icons8-heart-50.png" alt="В избранное">
                                     </a>
                                 </div>
                             <?php endif; ?>
@@ -218,7 +253,7 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
                         
                         <?php if(isset($_SESSION['role']) && $_SESSION['role'] == "admin"): ?>
                             <div class="admin_buttons">
-                                <a href="/core/Controllers/PostController.php?action=editProduct&id=<?=$product['id']?>" 
+                                <a href="/pages/editProduct.php?id=<?=$product['id']?>" 
                                 class="edit_btn">Редактировать</a>
                                 <a href="/core/Controllers/PostController.php?action=deleteProduct&id=<?=$product['id']?>" 
                                 class="delete_btn" 
@@ -231,8 +266,6 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
             </div>
         </section>
     </main>
-
-
 
     <script src="../scripts/theme.js"></script>
     <script src="../scripts/script.js"></script>
