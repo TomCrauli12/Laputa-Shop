@@ -11,9 +11,9 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h3>Информация</h3>
-                <a href="/pages/payment.html">Оплата и доставка</a>
-                <a href="/pages/Refund.html">Возврат</a>
-                <a href="/pages/about.html">О нас</a>
+                <a href="/pages/payment.php">Оплата и доставка</a>
+                <a href="/pages/Refund.php">Возврат</a>
+                <a href="/pages/about.php">О нас</a>
             </div>
             <div class="footer-section">
                 <h3>Контакты</h3>

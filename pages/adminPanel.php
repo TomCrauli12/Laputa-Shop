@@ -27,25 +27,25 @@ $conn = DB::getConnection();
 
     <section class="list">
         <ul>
-            <li><a href="./create_product.php">- Добавить товар</a></li>
+            <li><a href="../adminPages/create_product.php">- Добавить товар</a></li>
             <br>
             <li>Слайдер
                 <ul>
-                    <li><a href="./addToSlider.php">- Добавить слайдер</a></li>
+                    <li><a href="../adminPages/addToSlider.php">- Добавить слайдер</a></li>
                     <li><a href="../adminPages/deletedSliders.php">- Удалить слайдер</a></li>
                 </ul>
             </li>
             <br>
             <li>Информационный блок
                 <ul>
-                    <li><a href="./createInfoBlock.php">- Создать информационный блок</a></li>
+                    <li><a href="../adminPages/createInfoBlock.php">- Создать информационный блок</a></li>
                     <li>- Удалить инф блок (сделать)</li>
                 </ul>
             </li>
             <br>
             <li>Категории
                 <ul>
-                    <li><a href="./createCategory.php">- Создать категорию</a></li>
+                    <li><a href="../adminPages/createCategory.php">- Создать категорию</a></li>
                     <li>- Удалить категорию (сделать)</li>
                 </ul>
             </li>

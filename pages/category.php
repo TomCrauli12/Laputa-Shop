@@ -153,10 +153,9 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
                                 </div>
                             <?php endif; ?>
                         </div>
-                        
                         <?php if(isset($_SESSION['role']) && $_SESSION['role'] == "admin"): ?>
                             <div class="admin_buttons">
-                                <a href="/pages/editProduct.php?id=<?=$product['id']?>" 
+                                <a href="../adminPages/editProduct.php?id=<?=$product['id']?>" 
                                 class="edit_btn">Редактировать</a>
                                 <a href="/core/Controllers/PostController.php?action=deleteProduct&id=<?=$product['id']?>" 
                                 class="delete_btn" 

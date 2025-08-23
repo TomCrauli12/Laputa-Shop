@@ -94,7 +94,6 @@ if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
 
 // Получаем слайдеры
 $sliders = $conn->query('SELECT * FROM sliders')->fetchAll();
-
 // Получаем информационные блоки и их товары
 $infoBlocks = $conn->query('SELECT * FROM infoblock')->fetchAll(PDO::FETCH_ASSOC);
 $blocksData = [];
@@ -300,7 +299,7 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
                         
                         <?php if(isset($_SESSION['role']) && $_SESSION['role'] == "admin"): ?>
                             <div class="admin_buttons">
-                                <a href="./pages/editProduct.php?id=<?=$product['id']?>" 
+                                <a href="./adminPages/editProduct.php?id=<?=$product['id']?>" 
                                    class="edit_btn">Редактировать</a>
                                 <a href="/core/Controllers/PostController.php?action=deleteProduct&id=<?=$product['id']?>" 
                                    class="delete_btn" 
@@ -318,28 +317,7 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
         <?php endforeach; ?>
     </main>
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Информация</h3>
-                <a href="/pages/payment.html">Оплата и доставка</a>
-                <a href="/pages/Refund.html">Возврат</a>
-                <a href="/pages/about.html">О нас</a>
-            </div>
-            <div class="footer-section">
-                <h3>Контакты</h3>
-                <p>Email: info@laputa.ru</p>
-                <p>Телефон: +7 (123) 456-78-90</p>
-                <div class="social-links">
-                    <a href="#"><img src="/image/Image_system/icons8-vk-50.png" alt="Вконтакте"></a>
-                    <a href="#"><img src="/image/Image_system/icons8-телеграм-50.png" alt="Телеграм"></a>
-                </div>
-            </div>
-        </div>
-        <div class="copyright">
-            <p>&copy; <?=date('Y')?> Laputa. Все права защищены.</p>
-        </div>
-    </footer>
+<?php require_once './includes/footer.php'; ?>
 
     <script src="/scripts/script.js"></script>
     <script src="./scripts/theme.js"></script>
