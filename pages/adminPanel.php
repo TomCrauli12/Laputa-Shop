@@ -7,10 +7,6 @@ require_once '../core/Modules/PostModel.php';
 
 $conn = DB::getConnection();
 
-
-
-
-
 ?>
 
 
@@ -26,7 +22,7 @@ $conn = DB::getConnection();
 </head>
 <body>
 
-<?php require_once '../includes/header.php'; ?>
+    <?php require_once '../includes/header.php'; ?>
 
 
     <section class="list">
@@ -59,6 +55,7 @@ $conn = DB::getConnection();
 
 
 
+    <?php require_once '../includes/footer.php'; ?>
 
     <script src="../scripts/theme.js"></script>
     <script src="../scripts/script.js"></script>

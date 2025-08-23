@@ -11,11 +11,13 @@
     <title>Document</title>
 </head>
 <body>
+    <?php require_once '../includes/header.php'; ?>
     <form action="../core/Controllers/PostController.php?action=addSlider" method="post" enctype="multipart/form-data">
         <h1>Загрузить новый слайдер</h1>
         <input type="file" name="imageslider" id="">
         <button>Загрузить изображение</button>
         
     </form>
+    <?php require_once '../includes/footer.php'; ?>
 </body>
 </html>

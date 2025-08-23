@@ -64,6 +64,7 @@ $allCategory = $conn->query('SELECT * FROM `category`')->fetchAll(PDO::FETCH_ASS
 
         <button class="button" type="submit">Сохранить изменения</button>
     </form>
+    <?php require_once '../includes/footer.php'; ?>
 
     <script src="../scripts/theme.js"></script>
     <script src="../scripts/script.js"></script>

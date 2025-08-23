@@ -10,6 +10,8 @@
     <title>Document</title>
 </head>
 <body>
+    <?php require_once '../includes/header.php'; ?>
+
     <form action="../core/Controllers/PostController.php?action=addInfoBlock" method="post">
         <label for="infoBlockName">Название категории для отображения на сайте</label>
         <input type="text" name="infoBlockName" id="">
@@ -19,5 +21,6 @@
 
         <button>Создать категорию</button>
     </form>
+    <?php require_once '../includes/footer.php'; ?>
 </body>
 </html>

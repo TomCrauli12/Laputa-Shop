@@ -344,3 +344,19 @@ p, h1, h2, h3, h4, h5 {
     opacity: 0.9;
     transform: translateY(-1px);
 }
+footer{
+    padding: 1vw 5vw;
+    margin-top: auto;
+}
+.footer-section{
+    display: flex;
+    flex-direction: column;
+}
+.footer-content{
+    display: flex;
+    justify-content: space-between;
+}
+.copyright{
+    display: flex;
+    justify-content: center;
+}

@@ -19,6 +19,7 @@ $listcategory = $conn->query('SELECT * FROM category')->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style/static.css">
     <title>Document</title>
 </head>
 <body>
@@ -26,10 +27,10 @@ $listcategory = $conn->query('SELECT * FROM category')->fetchAll();
 
     <nav class="navbar">
         <div class="nav">
-            <a href="./payment.html">Оплата и доставка</a>
-            <a href="./Refund.html">Возврат товара</a>
-            <a href="./about.html">О нас</a>
-            <a href="./contact.html">Контакты</a>
+            <a href="./payment.php">Оплата и доставка</a>
+            <a href="./Refund.php">Возврат товара</a>
+            <a href="./about.php">О нас</a>
+            <a href="./contact.php">Контакты</a>
             <?php if(isset($_SESSION['role']) && $_SESSION['role'] == 'admin'): ?>
                 <a href="./adminPanel.php">AdminPanel</a>
 

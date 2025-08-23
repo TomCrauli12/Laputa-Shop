@@ -169,6 +169,7 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
             </div>
         </section>
     </main>
+    <?php require_once '../includes/footer.php'; ?>
 
     <script src="../scripts/theme.js"></script>
     <script src="../scripts/script.js"></script>

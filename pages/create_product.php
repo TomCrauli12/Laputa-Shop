@@ -24,6 +24,7 @@
     <title>Созданиие продукта</title>
 </head>
 <body>
+    <?php require_once '../includes/header.php'; ?>
 
     <!-- Добавить выбор информациооного блока
     добавить выбор категории -->
@@ -89,34 +90,8 @@
 можно добавить колонку с хештегом на выбор в какой инфо блок выложить товар
 так же редактировку к нему -->
 
-<!-- <footer>
-    <div class="footer">
-        <div class="nav_item">
-            <a href="../login.php"><img src="../image/Image_system/icons8-человек-48.png" alt=""></a>
-            <?php if(isset($_SESSION['login'])): ?>
-                <a href="../core/Controllers/UserController.php?action=logout">Выход</a>                
-            <?php else: ?>
-                <a href="./login.php">Вход</a>        
-            <?php endif; ?>
 
-            <?php if(isset($_SESSION['login'])): ?>
-                <label for="hd-1" ><p><?=$_SESSION['login']?></p></label>
-            <?php endif; ?>
-        </div>
-        <div class="nav_item">
-            <a href=""><img src="../image/Image_system/icons8-коробка-128 (1).png" alt=""></a>
-            <a href="">Заказы</a>
-        </div>
-        <div class="nav_item">
-            <a href="./favourites.php"><img src="../image/Image_system/icons8-сердце-50 (2).png" alt=""></a>
-            <a href="./favourites.php">Избранное</a>
-        </div>
-        <div class="nav_item">
-            <a href="./basket.php"><img src="../image/Image_system/icons8-корзины-32.png" alt=""></a>
-            <a href="./basket.php">Корзина</a>
-        </div>
-    </div>
-</footer> -->
+<?php require_once '../includes/footer.php'; ?>
 
 
 </body>

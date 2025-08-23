@@ -126,34 +126,7 @@ $bascket = $query->fetchAll();
     </section>
 
     <div class="conteiner_zero">
-        <footer>
-            <div class="footer">
-                <div class="nav_item">
-                    <a href="./login.php"><img src="../image/Image_system/icons8-человек-48.png" alt="Профиль"></a>
-                    <?php if(isset($_SESSION['login'])): ?>
-                        <a href="../core/Controllers/UserController.php?action=logout">Выход</a>                
-                    <?php else: ?>
-                        <a href="./login.php">Вход</a>        
-                    <?php endif; ?>
-
-                    <?php if(isset($_SESSION['login'])): ?>
-                        <label for="hd-1"><p><?=htmlspecialchars($_SESSION['login'])?></p></label>
-                    <?php endif; ?>
-                </div>
-                <div class="nav_item">
-                    <a href="./orders.php"><img src="../image/Image_system/icons8-коробка-128 (1).png" alt="Заказы"></a>
-                    <a href="./orders.php">Заказы</a>
-                </div>
-                <div class="nav_item">
-                    <a href="./favourites.php"><img src="../image/Image_system/icons8-сердце-50 (2).png" alt="Избранное"></a>
-                    <a href="./favourites.php">Избранное</a>
-                </div>
-                <div class="nav_item">
-                    <a href="./basket.php"><img src="../image/Image_system/icons8-корзины-32.png" alt="Корзина"></a>
-                    <a href="./basket.php">Корзина</a>
-                </div>
-            </div>
-        </footer>
+            <?php require_once '../includes/footer.php'; ?>
     </div>
 
     <script src="../scripts/theme.js"></script>

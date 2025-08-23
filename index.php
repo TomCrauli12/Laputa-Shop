@@ -127,10 +127,10 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <nav class="navbar">
         <div class="nav">
-            <a href="/pages/payment.html">Оплата и доставка</a>
-            <a href="/pages/Refund.html">Возврат и обмен</a>
-            <a href="/pages/about.html">О нас</a>
-            <a href="/pages/contact.html">Контакты</a>
+            <a href="/pages/payment.php">Оплата и доставка</a>
+            <a href="/pages/Refund.php">Возврат и обмен</a>
+            <a href="/pages/about.php">О нас</a>
+            <a href="/pages/contact.php">Контакты</a>
             <?php if(isset($_SESSION['role']) && $_SESSION['role'] == 'admin'): ?>
                 <a href="/pages/adminPanel.php">AdminPanel</a>
             <?php endif; ?>
@@ -320,14 +320,6 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
 
     <footer>
         <div class="footer-content">
-            <div class="footer-section">
-                <h3>Магазин</h3>
-                <?php foreach(array_slice($category, 0, 3) as $category): ?>
-                    <a href="/pages/category.php?name=<?=urlencode($category['categoryName'])?>">
-                        <?=htmlspecialchars($category['categoryName'])?>
-                    </a>
-                <?php endforeach; ?>
-            </div>
             <div class="footer-section">
                 <h3>Информация</h3>
                 <a href="/pages/payment.html">Оплата и доставка</a>
