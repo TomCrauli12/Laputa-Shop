@@ -584,23 +584,8 @@ p, h1, h2, h3, h4, h5 {
     margin-top: 15px;
 }
 
-.bascet {
-    flex: 1;
-    background-color: var(--button-bg);
-    color: var(--button-text);
-    border-radius: 6px;
-    padding: 10px;
-    text-align: center;
-    transition: all 0.3s ease;
-}
 
-.bascet > a {
-    color: var(--button-text);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    display: block;
-}
+
 
 .like {
     width: 40px;

@@ -37,6 +37,37 @@ if (isset($_GET['action']) && $_GET['action'] === 'toggle_favourite' && isset($_
     }
 }
 
+// Обработка корзины ДО любого вывода
+if (isset($_GET['action']) && $_GET['action'] === 'toggle_basket' && isset($_SESSION['id'])) {
+    $product_id = (int)($_GET['product_id'] ?? 0);
+    
+    if ($product_id > 0) {
+        try {
+            // Проверяем наличие товара в корзине
+            $stmt = $conn->prepare("SELECT id FROM basket WHERE user_id = ? AND product_id = ?");
+            $stmt->execute([$_SESSION['id'], $product_id]);
+            $basketItem = $stmt->fetch();
+
+            if ($basketItem) {
+                // Редирект в корзину, если товар уже там
+                header("Location: /pages/basket.php");
+                exit;
+            } else {
+                // Добавляем в корзину
+                $conn->prepare("INSERT INTO basket (user_id, product_id, quantity) VALUES (?, ?, 1)")
+                     ->execute([$_SESSION['id'], $product_id]);
+            }
+
+            // Редирект на предыдущую страницу без параметров
+            $redirect_url = isset($_SERVER['HTTP_REFERER']) ? strtok($_SERVER['HTTP_REFERER'], '?') : '/index.php';
+            header("Location: " . $redirect_url);
+            exit;
+        } catch (PDOException $e) {
+            error_log("Ошибка корзины: " . $e->getMessage());
+        }
+    }
+}
+
 // Получаем список избранных товаров
 $favourites = [];
 if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
@@ -46,6 +77,18 @@ if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
         $favourites = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
     } catch (PDOException $e) {
         error_log("Ошибка: " . $e->getMessage());
+    }
+}
+
+// Получаем список товаров в корзине
+$basketItems = [];
+if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
+    try {
+        $stmt = $conn->prepare("SELECT product_id FROM basket WHERE user_id = ?");
+        $stmt->execute([$_SESSION['id']]);
+        $basketItems = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+    } catch (PDOException $e) {
+        error_log("Ошибка корзины: " . $e->getMessage());
     }
 }
 
@@ -66,7 +109,7 @@ foreach ($infoBlocks as $block) {
     ];
 }
 
-// Получаем категории для меню
+// категории для меню
 $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -89,10 +132,7 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
             <a href="/pages/about.html">О нас</a>
             <a href="/pages/contact.html">Контакты</a>
             <?php if(isset($_SESSION['role']) && $_SESSION['role'] == 'admin'): ?>
-                <a href="/pages/create_product.php">Добавить товар</a>
-                <a href="/pages/addToSlider.php">Добавить слайдер</a>
-                <a href="/pages/createCategory.php">Создать категорию</a>
-                <a href="/pages/createInfoBlock.php">Создать инфоблок</a>
+                <a href="/pages/adminPanel.php">AdminPanel</a>
             <?php endif; ?>
         </div>
         <div class="contact">
@@ -228,9 +268,16 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
                         <div class="button">
                             <?php if(isset($_SESSION['login']) && isset($_SESSION['id'])): ?>
                                 <div class="bascet">
-                                    <a href="/core/Controllers/PostController.php?action=AddToBasket&product_id=<?=$product['id']?>">
-                                        В корзину
-                                    </a>
+                                    <?php $inBasket = in_array($product['id'], $basketItems); ?>
+                                    <?php if($inBasket): ?>
+                                        <a href="/pages/basket.php" class="in-basket">
+                                            Товар в корзине
+                                        </a>
+                                    <?php else: ?>
+                                        <a href="/core/Controllers/PostController.php?action=AddToBasket&product_id=<?=$product['id']?>">
+                                            В корзину
+                                        </a>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="like">
                                     <?php $isFavourite = in_array($product['id'], $favourites); ?>

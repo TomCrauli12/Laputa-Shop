@@ -8,7 +8,7 @@
     <title>Laputa | Заказы</title>
 </head>
 <body>
-
+    <?php require_once '../includes/header.php'; ?>
 
 
 

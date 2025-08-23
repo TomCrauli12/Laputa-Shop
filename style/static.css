@@ -307,3 +307,40 @@ p, h1, h2, h3, h4, h5 {
 .contact {
     display: flex;
 }
+
+
+.bascet {
+    flex: 1;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.bascet.in-basket {
+    border: 1px solid red;
+    background-color: transparent;
+}
+
+.bascet.in-basket .in-basket-link {
+    color: red;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.bascet a {
+    color: var(--button-text);
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.bascet:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
