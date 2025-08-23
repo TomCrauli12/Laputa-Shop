@@ -295,3 +295,20 @@ class infoBlock{
     }
 
 }
+
+class products{
+
+    static function showProduct($id){
+
+        $conn = DB::getConnection();
+
+        $query = $conn->prepare("SELECT * FROM `products` WHERE id = ?");
+
+        $query->execute([$id]);
+
+        $theme = $query->fetch();
+
+        return $theme;
+
+    }
+}

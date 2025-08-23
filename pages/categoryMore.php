@@ -3,6 +3,7 @@ session_start();
 
 require_once '../DB/start.php';
 require_once '../core/Modules/PostModel.php';
+require_once '../core/Modules/UserModel.php';
 
 $conn = DB::getConnection();
 
@@ -61,6 +62,17 @@ if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
     }
 }
 
+// Получаем список товаров в корзине
+$basketItems = [];
+if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
+    try {
+        $stmt = $conn->prepare("SELECT product_id FROM basket WHERE user_id = ?");
+        $stmt->execute([$_SESSION['id']]);
+        $basketItems = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+    } catch (PDOException $e) {
+        error_log("Ошибка корзины: " . $e->getMessage());
+    }
+}
 
 // Определяем, вызываем ли мы категорию или информационный блок
 if (isset($_GET['name'])) {
@@ -181,24 +193,22 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
                             <p><?=htmlspecialchars($product['price'])?> ₽</p>
                         </div>
                         <div class="button">
-                            <?php if(isset($_SESSION['login'])): ?>
+                            <?php if(isset($_SESSION['login']) && isset($_SESSION['id'])): ?>
                                 <div class="bascet">
-                                    <a href="/core/Controllers/PostController.php?action=AddToBasket&product_id=<?=$product['id']?>">
-                                        В корзину
-                                    </a>
+                                    <?php $inBasket = in_array($product['id'], $basketItems); ?>
+                                    <?php if($inBasket): ?>
+                                        <a href="/pages/basket.php" class="in-basket">
+                                            Товар в корзине
+                                        </a>
+                                    <?php else: ?>
+                                        <a href="/core/Controllers/PostController.php?action=AddToBasket&product_id=<?=$product['id']?>">
+                                            В корзину
+                                        </a>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="like">
                                     <?php $isFavourite = in_array($product['id'], $favourites); ?>
-                                    <?php
-                                    // Формируем URL для избранного с сохранением всех параметров
-                                    $favourite_url = $current_page . '?action=toggle_favourite&product_id=' . $product['id'];
-                                    foreach ($_GET as $key => $value) {
-                                        if ($key !== 'action' && $key !== 'product_id') {
-                                            $favourite_url .= '&' . $key . '=' . urlencode($value);
-                                        }
-                                    }
-                                    ?>
-                                    <a href="<?=$favourite_url?>">
+                                    <a href="/index.php?action=toggle_favourite&product_id=<?=$product['id']?>">
                                         <img src="/image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
                                             alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
                                     </a>
