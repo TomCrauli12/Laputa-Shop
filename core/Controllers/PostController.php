@@ -173,5 +173,14 @@ elseif($_GET['action']=="addInfoBlock"){
     Header("Location: ../../index.php");
 }
 
+elseif($_GET['action']=="deleteSlider"){
 
+    session_start();
 
+    isset($_GET['id']) ? $id = trim($_GET['id']) : Header("Location: /");;
+
+    slider::deleteSlider($id);
+
+    Header("Location: ../../index.php");
+
+}

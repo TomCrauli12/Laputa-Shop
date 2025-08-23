@@ -1,0 +1,12 @@
+.list{
+    padding: 1vw 5vw;
+}
+ul{
+    list-style: none;
+}
+li{
+    font-size: 20px;
+}
+a{
+    font-size: 18px;
+}

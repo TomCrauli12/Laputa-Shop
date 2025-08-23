@@ -53,7 +53,6 @@ $query = $conn->prepare('select * from `basket` where user_id = ?');
 $query->execute([$_SESSION['id']]);
 $bascket = $query->fetchAll();
 
-$listcategory = $conn->query('SELECT * FROM category')->fetchAll();
 ?>
 
 <!DOCTYPE html>

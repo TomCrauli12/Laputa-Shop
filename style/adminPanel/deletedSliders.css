@@ -1,0 +1,15 @@
+.main{
+    padding: 1vw 5vw;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.slide{
+    padding: 0vw 1vw;
+    display: flex;
+    flex-direction: column;
+}
+.slide>img{
+    width: 25vw;
+    border-radius: 8px;
+}

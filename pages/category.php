@@ -48,7 +48,6 @@ if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
     }
 }
 
-$listcategory = $conn->query('SELECT * FROM category')->fetchAll();
 
 // Получаем имя категории из параметра URL
 $categoryName = $_GET['name'] ?? "Манга";

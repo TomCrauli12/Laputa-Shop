@@ -208,8 +208,13 @@ class slider{
     }
 
 
-    static function deleteSlider(){
+    static function deleteSlider($id){
 
+        $conn = DB::getConnection();
+
+        $query = $conn->prepare("DELETE FROM `sliders` WHERE id = ?");
+
+        $query->execute([$id]);
     }
 
     static function redactSlider($id){

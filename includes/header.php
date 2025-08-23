@@ -1,3 +1,19 @@
+<?php
+session_start();
+
+require_once '../DB/start.php';
+require_once '../core/Modules/UserModel.php';
+require_once '../core/Modules/PostModel.php';
+
+$conn = DB::getConnection();
+
+$listcategory = $conn->query('SELECT * FROM category')->fetchAll();
+
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -105,6 +121,15 @@
         </div>
     </header>
 
-
+    <script src="../scripts/theme.js"></script>
+    <script src="../scripts/script.js"></script>
+    <script>
+        // Обработчик для кнопки каталога
+        document.getElementById('catalog-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('burger-checkbox').checked = 
+                !document.getElementById('burger-checkbox').checked;
+        });
+    </script>
 </body>
 </html>

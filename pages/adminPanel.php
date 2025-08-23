@@ -21,6 +21,7 @@ $conn = DB::getConnection();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style/static.css">
+    <link rel="stylesheet" href="../style/adminPanel.css">
     <title>Document</title>
 </head>
 <body>
@@ -28,38 +29,32 @@ $conn = DB::getConnection();
 <?php require_once '../includes/header.php'; ?>
 
 
-    <section>
+    <section class="list">
         <ul>
-            <li><a href="./create_product.php">Добавить товар</a></li>
+            <li><a href="./create_product.php">- Добавить товар</a></li>
+            <br>
             <li>Слайдер
-                <ol>
-                    <li><a href="./addToSlider.php">Добавить слайдер</a></li>
-                    <li>Удалить слайдер (сделать)</li>
-                </ol>
+                <ul>
+                    <li><a href="./addToSlider.php">- Добавить слайдер</a></li>
+                    <li><a href="../adminPages/deletedSliders.php">- Удалить слайдер</a></li>
+                </ul>
             </li>
-
+            <br>
             <li>Информационный блок
-                <ol>
-                    <li><a href="./createInfoBlock.php">Создать информационный блок</a></li>
-                    <li>Удалить инф блок (сделать)</li>
-                </ol>
+                <ul>
+                    <li><a href="./createInfoBlock.php">- Создать информационный блок</a></li>
+                    <li>- Удалить инф блок (сделать)</li>
+                </ul>
             </li>
-
+            <br>
             <li>Категории
-                <ol>
-                    <li><a href="./createCategory.php">Создать категорию</a></li>
-                    <li>Удалить категорию (сделать)</li>
-                </ol>
+                <ul>
+                    <li><a href="./createCategory.php">- Создать категорию</a></li>
+                    <li>- Удалить категорию (сделать)</li>
+                </ul>
             </li>
-
         </ul>
 
-
-
-
-                
-                
-                
     </section>
 
 

@@ -61,7 +61,6 @@ if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
     }
 }
 
-$listcategory = $conn->query('SELECT * FROM category')->fetchAll();
 
 // Определяем, вызываем ли мы категорию или информационный блок
 if (isset($_GET['name'])) {
