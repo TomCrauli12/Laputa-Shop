@@ -77,7 +77,11 @@ elseif($_GET['action']=="AddToBasket"){
     
     Basket::AddToBasket($product_id,$userid);
 
-    Header("Location: /");
+    $redirect_url = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/';
+
+    header("Location: " . $redirect_url);
+    
+    exit;
 
 }
 else{

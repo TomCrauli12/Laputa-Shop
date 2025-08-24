@@ -14,7 +14,7 @@ if($_GET['action']=="register"){
 
     UserModel::register($login, $name, $password, $role);
 
-    header("Location: ../../pages/identification.php");
+    header("Location: ../../pages/login.php");
 
 }
 elseif($_GET['action']=="login"){

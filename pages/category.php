@@ -27,10 +27,10 @@ if (isset($_GET['action']) && $_GET['action'] === 'toggle_favourite' && isset($_
                      ->execute([$_SESSION['id'], $product_id]);
             }
 
-            // Редирект на предыдущую страницу без параметров
-            $redirect_url = isset($_SERVER['HTTP_REFERER']) ? strtok($_SERVER['HTTP_REFERER'], '?') : '/index.php';
-            header("Location: " . $redirect_url);
-            exit;
+        // Редирект на предыдущую страницу С сохранением параметров
+        $redirect_url = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/index.php';
+        header("Location: " . $redirect_url);
+        exit;
         } catch (PDOException $e) {
             error_log("Ошибка: " . $e->getMessage());
         }
@@ -156,7 +156,7 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
                                 </div>
                                 <div class="like">
                                     <?php $isFavourite = in_array($product['id'], $favourites); ?>
-                                    <a href="../index.php?action=toggle_favourite&product_id=<?=$product['id']?>">
+                                    <a href="./category.php?action=toggle_favourite&product_id=<?=$product['id']?>&name=<?=urlencode($categoryName)?>">
                                         <img src="../image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
                                             alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
                                     </a>

@@ -27,23 +27,27 @@ if (isset($_GET['action']) && $_GET['action'] === 'toggle_favourite' && isset($_
                      ->execute([$_SESSION['id'], $product_id]);
             }
 
-            // Формируем URL для редиректа
-            $redirect_url = $_SERVER['PHP_SELF'];
-            $params = [];
-            
-            // Сохраняем все GET-параметры кроме action и product_id
-            foreach ($_GET as $key => $value) {
-                if ($key !== 'action' && $key !== 'product_id') {
-                    $params[] = $key . '=' . urlencode($value);
-                }
+            // Редирект на предыдущую страницу с сохранением всех параметров
+            if (isset($_SERVER['HTTP_REFERER'])) {
+                $redirect_url = $_SERVER['HTTP_REFERER'];
+            } else {
+            // Если нет реферера, создаем URL на основе текущего контекста
+            if (isset($_GET['name'])) {
+                $redirect_url = './category.php?name=' . urlencode($_GET['name']);
+            } elseif (isset($_GET['block'])) {
+                $redirect_url = './categoryMore.php?block=' . urlencode($_GET['block']);
+            } else {
+                $redirect_url = '/index.php';
             }
             
-            if (!empty($params)) {
-                $redirect_url .= '?' . implode('&', $params);
+            // Добавляем параметры фильтрации если они есть
+            if (isset($_GET['min_value']) && isset($_GET['max_value'])) {
+                $redirect_url .= '&min_value=' . (int)$_GET['min_value'] . '&max_value=' . (int)$_GET['max_value'];
             }
-            
-            header("Location: " . $redirect_url);
-            exit;
+        }
+
+        header("Location: " . $redirect_url);
+        exit;
         } catch (PDOException $e) {
             error_log("Ошибка: " . $e->getMessage());
         }
@@ -208,10 +212,17 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
                                 </div>
                                 <div class="like">
                                     <?php $isFavourite = in_array($product['id'], $favourites); ?>
-                                    <a href="../index.php?action=toggle_favourite&product_id=<?=$product['id']?>">
-                                        <img src="../image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
-                                            alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
-                                    </a>
+                                    <?php if (isset($_GET['name'])): ?>
+                                        <a href="./category.php?action=toggle_favourite&product_id=<?=$product['id']?>&name=<?=urlencode($categoryName)?><?=isset($_GET['min_value']) ? '&min_value='.(int)$_GET['min_value'] : ''?><?=isset($_GET['max_value']) ? '&max_value='.(int)$_GET['max_value'] : ''?>">
+                                            <img src="../image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
+                                                alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
+                                        </a>
+                                    <?php elseif (isset($_GET['block'])): ?>
+                                        <a href="./categoryMore.php?action=toggle_favourite&product_id=<?=$product['id']?>&block=<?=urlencode($blockDBName)?><?=isset($_GET['min_value']) ? '&min_value='.(int)$_GET['min_value'] : ''?><?=isset($_GET['max_value']) ? '&max_value='.(int)$_GET['max_value'] : ''?>">
+                                            <img src="../image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
+                                                alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
+                                        </a>
+                                    <?php endif; ?>
                                 </div>
                             <?php else: ?>
                                 <div class="bascet">
