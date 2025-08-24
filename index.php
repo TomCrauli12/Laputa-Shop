@@ -118,20 +118,20 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="color-scheme" content="light dark">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/style/static.css">
-    <link rel="stylesheet" href="/style/style.css">
-    <link rel="stylesheet" href="/style/medea.css">
+    <link rel="stylesheet" href="./style/static.css">
+    <link rel="stylesheet" href="./style/style.css">
+    <link rel="stylesheet" href="./style/medea.css">
     <title>Laputa | Главная</title>
 </head>
 <body>
     <nav class="navbar">
         <div class="nav">
-            <a href="/pages/payment.php">Оплата и доставка</a>
-            <a href="/pages/Refund.php">Возврат и обмен</a>
-            <a href="/pages/about.php">О нас</a>
-            <a href="/pages/contact.php">Контакты</a>
+            <a href="./pages/payment.php">Оплата и доставка</a>
+            <a href="./pages/Refund.php">Возврат и обмен</a>
+            <a href="./pages/about.php">О нас</a>
+            <a href="./pages/contact.php">Контакты</a>
             <?php if(isset($_SESSION['role']) && $_SESSION['role'] == 'admin'): ?>
-                <a href="/pages/adminPanel.php">AdminPanel</a>
+                <a href="./pages/adminPanel.php">AdminPanel</a>
             <?php endif; ?>
         </div>
         <div class="contact">
@@ -145,18 +145,18 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
                     <span class="theme-switcher__text">Тёмная</span>
                 </label>
             </div>
-            <a href="#"><img src="/image/Image_system/icons8-vk-50.png" alt="Вконтакте"></a>
+            <a href="#"><img src="./image/Image_system/icons8-vk-50.png" alt="Вконтакте"></a>
             <div class="logo_contact">
-                <a href="/index.php"><h1>Laputa</h1></a>
+                <a href="./index.php"><h1>Laputa</h1></a>
             </div>
-            <a href="#"><img src="/image/Image_system/icons8-телеграм-50.png" alt="Телеграм"></a>
+            <a href="#"><img src="./image/Image_system/icons8-телеграм-50.png" alt="Телеграм"></a>
         </div>
     </nav>
 
     <header>
         <div class="header_left">
             <div class="logo">
-                <a href="/index.php"><h1>Laputa</h1></a>
+                <a href="./index.php"><h1>Laputa</h1></a>
             </div>
             
             <div class="burger-checkbox">
@@ -169,7 +169,7 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
                 <div class="info-block">
                     <nav class="categories">
                         <?php foreach($category as $category): ?>
-                            <a href="/pages/category.php?name=<?=urlencode($category['categoryName'])?>">
+                            <a href="./pages/category.php?name=<?=urlencode($category['categoryName'])?>">
                                 <?=htmlspecialchars($category['categoryName'])?>
                             </a>
                         <?php endforeach; ?>
@@ -179,7 +179,7 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div class="sean">
-            <form class="search" action="/pages/search.php" method="get">
+            <form class="search" action="./pages/search.php" method="get">
                 <input type="search" name="query" placeholder="Введите запрос..." required>
                 <button type="submit">Найти</button>
             </form>   
@@ -187,34 +187,34 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
 
         <div class="header_right">
             <div class="nav_item">
-                <a href="/pages/login.php"><img src="/image/Image_system/icons8-человек-48.png" alt="Профиль"></a>
+                <a href="./pages/login.php"><img src="./image/Image_system/icons8-человек-48.png" alt="Профиль"></a>
                 <?php if(isset($_SESSION['login'])): ?>
-                    <a href="/core/Controllers/UserController.php?action=logout">Выход</a>
+                    <a href="./core/Controllers/UserController.php?action=logout">Выход</a>
                     <label for="hd-1"><p><?=htmlspecialchars($_SESSION['login'])?></p></label>
                 <?php else: ?>
-                    <a href="/pages/login.php">Вход</a>
+                    <a href="./pages/login.php">Вход</a>
                 <?php endif; ?>
             </div>
             <div class="nav_item">
-                <a href="/pages/orders.php"><img src="/image/Image_system/icons8-коробка-128 (1).png" alt="Заказы"></a>
-                <a href="/pages/orders.php">Заказы</a>
+                <a href="./pages/orders.php"><img src="./image/Image_system/icons8-коробка-128 (1).png" alt="Заказы"></a>
+                <a href="./pages/orders.php">Заказы</a>
             </div>
             <div class="nav_item">
                 <?php if(isset($_SESSION['login'])): ?>
-                    <a href="/pages/favourites.php"><img src="/image/Image_system/icons8-сердце-50 (2).png" alt="Избранное"></a>
-                    <a href="/pages/favourites.php">Избранное</a>
+                    <a href="./pages/favourites.php"><img src="./image/Image_system/icons8-сердце-50 (2).png" alt="Избранное"></a>
+                    <a href="./pages/favourites.php">Избранное</a>
                 <?php else: ?>
-                    <a href="/pages/login.php"><img src="/image/Image_system/icons8-сердце-50 (2).png" alt="Избранное"></a>
-                    <a href="/pages/login.php">Избранное</a>
+                    <a href="./pages/login.php"><img src="./image/Image_system/icons8-сердце-50 (2).png" alt="Избранное"></a>
+                    <a href="./pages/login.php">Избранное</a>
                 <?php endif; ?>
             </div>
             <div class="nav_item">
                 <?php if(isset($_SESSION['login'])): ?>
-                    <a href="/pages/basket.php"><img src="/image/Image_system/icons8-корзины-32.png" alt="Корзина"></a>
-                    <a href="/pages/basket.php">Корзина</a>
+                    <a href="./pages/basket.php"><img src="./image/Image_system/icons8-корзины-32.png" alt="Корзина"></a>
+                    <a href="./pages/basket.php">Корзина</a>
                 <?php else: ?>
-                    <a href="/pages/login.php"><img src="/image/Image_system/icons8-корзины-32.png" alt="Корзина"></a>
-                    <a href="/pages/login.php">Корзина</a>
+                    <a href="./pages/login.php"><img src="./image/Image_system/icons8-корзины-32.png" alt="Корзина"></a>
+                    <a href="./pages/login.php">Корзина</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -245,7 +245,7 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
             <div class="container">
                 <div class="section_name">
                     <h2><?=htmlspecialchars($block['name'])?></h2>
-                    <a href="/pages/categoryMore.php?block=<?=urlencode($blockDBName)?>">Смотреть больше</a>
+                    <a href="./pages/categoryMore.php?block=<?=urlencode($blockDBName)?>">Смотреть больше</a>
                 </div>
                 
                 <?php if(!empty($block['products'])): ?>
@@ -253,13 +253,13 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
                     <?php foreach ($block['products'] as $product): ?>
                     <div class="card">
                         <div class="img_product">
-                            <a href="/pages/product.php?id=<?=$product['id']?>">
-                                <img src="/image/image_product/<?=htmlspecialchars($product['files'])?>" 
+                            <a href="./pages/product.php?id=<?=$product['id']?>">
+                                <img src="./image/image_product/<?=htmlspecialchars($product['files'])?>" 
                                      alt="<?=htmlspecialchars($product['title'])?>">
                             </a>
                         </div>
                         <div class="price">
-                            <a href="/pages/product.php?id=<?=$product['id']?>">
+                            <a href="./pages/product.php?id=<?=$product['id']?>">
                                 <h3><?=htmlspecialchars($product['title'])?></h3>
                             </a> 
                             <p><?=htmlspecialchars($product['price'])?> ₽</p>
@@ -269,29 +269,29 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="bascet">
                                     <?php $inBasket = in_array($product['id'], $basketItems); ?>
                                     <?php if($inBasket): ?>
-                                        <a href="/pages/basket.php" class="in-basket">
+                                        <a href="./pages/basket.php" class="in-basket">
                                             Товар в корзине
                                         </a>
                                     <?php else: ?>
-                                        <a href="/core/Controllers/PostController.php?action=AddToBasket&product_id=<?=$product['id']?>">
+                                        <a href="./core/Controllers/PostController.php?action=AddToBasket&product_id=<?=$product['id']?>">
                                             В корзину
                                         </a>
                                     <?php endif; ?>
                                 </div>
                                 <div class="like">
                                     <?php $isFavourite = in_array($product['id'], $favourites); ?>
-                                    <a href="/index.php?action=toggle_favourite&product_id=<?=$product['id']?>">
-                                        <img src="/image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
+                                    <a href="./index.php?action=toggle_favourite&product_id=<?=$product['id']?>">
+                                        <img src="./image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
                                             alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
                                     </a>
                                 </div>
                             <?php else: ?>
                                 <div class="bascet">
-                                    <a href="/pages/login.php">В корзину</a>
+                                    <a href="./pages/login.php">В корзину</a>
                                 </div>
                                 <div class="like">
-                                    <a href="/pages/login.php">
-                                        <img src="/image/Image_system/icons8-heart-50.png" alt="В избранное">
+                                    <a href="./pages/login.php">
+                                        <img src="./image/Image_system/icons8-heart-50.png" alt="В избранное">
                                     </a>
                                 </div>
                             <?php endif; ?>
@@ -301,7 +301,7 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
                             <div class="admin_buttons">
                                 <a href="./adminPages/editProduct.php?id=<?=$product['id']?>" 
                                    class="edit_btn">Редактировать</a>
-                                <a href="/core/Controllers/PostController.php?action=deleteProduct&id=<?=$product['id']?>" 
+                                <a href="./core/Controllers/PostController.php?action=deleteProduct&id=<?=$product['id']?>" 
                                    class="delete_btn" 
                                    onclick="return confirm('Удалить этот товар?')">Удалить</a>
                             </div>
@@ -319,7 +319,7 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
 
 <?php require_once './includes/footer.php'; ?>
 
-    <script src="/scripts/script.js"></script>
+    <script src="./scripts/script.js"></script>
     <script src="./scripts/theme.js"></script>
 </body>
 </html>

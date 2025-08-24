@@ -87,11 +87,11 @@ $bascket = $query->fetchAll();
             <?php foreach($products as $key): ?>
             <div class="basket_card">
                 <div class="img_basket_product">
-                    <a href="/pages/product.php?id=<?=$key['id']?>"><img src="../image/image_product/<?=$key['files']?>" alt="<?=htmlspecialchars($key['title'])?>"></a>
+                    <a href="./product.php?id=<?=$key['id']?>"><img src="../image/image_product/<?=$key['files']?>" alt="<?=htmlspecialchars($key['title'])?>"></a>
                 </div>
                 <div class="info_product">
                     <div class="price">
-                        <a href="/pages/product.php?id=<?=$key['id']?>"><h1><?=htmlspecialchars($key['title'])?></h1></a> 
+                        <a href="./product.php?id=<?=$key['id']?>"><h1><?=htmlspecialchars($key['title'])?></h1></a> 
                         <p><?=htmlspecialchars($key['price'])?> ₽</p>
                     </div>
                     <div class="button">

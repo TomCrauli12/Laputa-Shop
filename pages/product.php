@@ -28,7 +28,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'toggle_favourite' && isset($_
             }
 
             // Редирект на предыдущую страницу без параметров
-            $redirect_url = isset($_SERVER['HTTP_REFERER']) ? strtok($_SERVER['HTTP_REFERER'], '?') : '/index.php';
+            $redirect_url = isset($_SERVER['HTTP_REFERER']) ? strtok($_SERVER['HTTP_REFERER'], '?') : '../index.php';
             header("Location: " . $redirect_url);
             exit;
         } catch (PDOException $e) {
@@ -117,29 +117,29 @@ $inBasket = in_array($product['id'], $basketItems);
                 <?php if(isset($_SESSION['login']) && isset($_SESSION['id'])): ?>
                     <div class="bascet">
                         <?php if($inBasket): ?>
-                            <a href="/pages/basket.php" class="in-basket">
+                            <a href="./basket.php" class="in-basket">
                                 Товар в корзине
                             </a>
                         <?php else: ?>
-                            <a href="/core/Controllers/PostController.php?action=AddToBasket&product_id=<?=$product['id']?>">
+                            <a href="../core/Controllers/PostController.php?action=AddToBasket&product_id=<?=$product['id']?>">
                                 В корзину
                             </a>
                         <?php endif; ?>
                     </div>
                     <div class="like">
                         <?php $isFavourite = in_array($product['id'], $favourites); ?>
-                        <a href="/index.php?action=toggle_favourite&product_id=<?=$product['id']?>">
-                            <img src="/image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
+                        <a href="../index.php?action=toggle_favourite&product_id=<?=$product['id']?>">
+                            <img src="../image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
                                 alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
                         </a>
                     </div>
                 <?php else: ?>
                     <div class="bascet">
-                        <a href="/pages/login.php">В корзину</a>
+                        <a href="./login.php">В корзину</a>
                     </div>
                     <div class="like">
-                        <a href="/pages/login.php">
-                            <img src="/image/Image_system/icons8-heart-50.png" alt="В избранное">
+                        <a href="./login.php">
+                            <img src="../image/Image_system/icons8-heart-50.png" alt="В избранное">
                         </a>
                     </div>
                 <?php endif; ?>

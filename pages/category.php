@@ -70,7 +70,7 @@ $stmt->execute([$categoryName]);
 $category = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$category) {
-    header("Location: /index.php?error=category_not_found");
+    header("Location: ../index.php?error=category_not_found");
     exit();
 }
 
@@ -129,13 +129,13 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
                     <?php foreach($products as $product): ?>
                     <div class="card">
                         <div class="img_product">
-                            <a href="/pages/product.php?id=<?=$product['id']?>">
-                                <img src="/image/image_product/<?=htmlspecialchars($product['files'])?>" 
+                            <a href="./product.php?id=<?=$product['id']?>">
+                                <img src="../image/image_product/<?=htmlspecialchars($product['files'])?>" 
                                     alt="<?=htmlspecialchars($product['title'])?>">
                             </a>
                         </div>
                         <div class="price">
-                            <a href="/pages/product.php?id=<?=$product['id']?>">
+                            <a href="./product.php?id=<?=$product['id']?>">
                                 <h3><?=htmlspecialchars($product['title'])?></h3>
                             </a> 
                             <p><?=htmlspecialchars($product['price'])?> ₽</p>
@@ -145,29 +145,29 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
                                 <div class="bascet">
                                     <?php $inBasket = in_array($product['id'], $basketItems); ?>
                                     <?php if($inBasket): ?>
-                                        <a href="/pages/basket.php" class="in-basket">
+                                        <a href="./basket.php" class="in-basket">
                                             Товар в корзине
                                         </a>
                                     <?php else: ?>
-                                        <a href="/core/Controllers/PostController.php?action=AddToBasket&product_id=<?=$product['id']?>">
+                                        <a href="../core/Controllers/PostController.php?action=AddToBasket&product_id=<?=$product['id']?>">
                                             В корзину
                                         </a>
                                     <?php endif; ?>
                                 </div>
                                 <div class="like">
                                     <?php $isFavourite = in_array($product['id'], $favourites); ?>
-                                    <a href="/index.php?action=toggle_favourite&product_id=<?=$product['id']?>">
-                                        <img src="/image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
+                                    <a href="../index.php?action=toggle_favourite&product_id=<?=$product['id']?>">
+                                        <img src="../image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
                                             alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
                                     </a>
                                 </div>
                             <?php else: ?>
                                 <div class="bascet">
-                                    <a href="/pages/login.php">В корзину</a>
+                                    <a href="./login.php">В корзину</a>
                                 </div>
                                 <div class="like">
-                                    <a href="/pages/login.php">
-                                        <img src="/image/Image_system/icons8-heart-50.png" alt="В избранное">
+                                    <a href="./login.php">
+                                        <img src="../image/Image_system/icons8-heart-50.png" alt="В избранное">
                                     </a>
                                 </div>
                             <?php endif; ?>
@@ -176,7 +176,7 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
                             <div class="admin_buttons">
                                 <a href="../adminPages/editProduct.php?id=<?=$product['id']?>" 
                                 class="edit_btn">Редактировать</a>
-                                <a href="/core/Controllers/PostController.php?action=deleteProduct&id=<?=$product['id']?>" 
+                                <a href="../core/Controllers/PostController.php?action=deleteProduct&id=<?=$product['id']?>" 
                                 class="delete_btn" 
                                 onclick="return confirm('Удалить этот товар?')">Удалить</a>
                             </div>
