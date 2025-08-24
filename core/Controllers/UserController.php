@@ -30,7 +30,7 @@ elseif($_GET['action']=="logout"){
 
     session_start();
     session_destroy();
-    Header("Location: /");
+    Header("Location: ../../index.php");
 
 }
 else{

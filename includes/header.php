@@ -33,7 +33,6 @@ $listcategory = $conn->query('SELECT * FROM category')->fetchAll();
             <a href="./contact.php">Контакты</a>
             <?php if(isset($_SESSION['role']) && $_SESSION['role'] == 'admin'): ?>
                 <a href="./adminPanel.php">AdminPanel</a>
-
             <?php endif; ?>
         </div>
         <div class="contact">
@@ -69,7 +68,7 @@ $listcategory = $conn->query('SELECT * FROM category')->fetchAll();
                 <div class="info-block">
                     <nav class="categories">
                         <?php foreach($listcategory as $category): ?>
-                            <a href="/pages/category.php?name=<?=urlencode($category['categoryName'])?>">
+                            <a href="./category.php?name=<?=urlencode($category['categoryName'])?>">
                                 <?=htmlspecialchars($category['categoryName'])?>
                             </a>
                         <?php endforeach; ?>

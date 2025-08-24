@@ -62,7 +62,7 @@ if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
 }
 
 // Получаем имя категории из параметра URL
-$categoryName = $_GET['name'] ?? "Манга";
+$categoryName = $_GET['name'];
 
 // Получаем информацию о категории
 $stmt = $conn->prepare("SELECT * FROM category WHERE categoryName = ?");

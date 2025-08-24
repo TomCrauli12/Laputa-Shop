@@ -4,7 +4,6 @@ session_start();
 require_once __DIR__ . '/DB/start.php';
 require_once __DIR__ . '/core/Modules/UserModel.php';
 require_once __DIR__ . '/core/Modules/PostModel.php';
-
 $conn = DB::getConnection();
 
 // Обработка избранного ДО любого вывода
