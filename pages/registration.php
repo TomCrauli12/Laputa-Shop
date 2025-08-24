@@ -1,5 +1,6 @@
 <?php
 require_once '../DB/start.php';
+
 ?>
 
 <!DOCTYPE html>

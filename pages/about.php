@@ -1,3 +1,14 @@
+<?php
+
+    session_start();
+
+    require_once '../DB/start.php';
+    require_once '../core/Modules/UserModel.php';
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
