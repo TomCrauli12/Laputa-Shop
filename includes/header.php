@@ -24,7 +24,6 @@ $listcategory = $conn->query('SELECT * FROM category')->fetchAll();
 </head>
 <body>
 
-
     <nav class="navbar">
         <div class="nav">
             <a href="./payment.php">Оплата и доставка</a>
