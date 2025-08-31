@@ -77,9 +77,9 @@ $listcategory = $conn->query('SELECT * FROM category')->fetchAll();
         </div>
 
         <div class="sean">
-            <form class="search" action="./search.php" method="get">
-                <input type="search" name="query" placeholder="Введите запрос..." required>
-                <button type="submit">Найти</button>
+            <form class="search" action="./search.php" method="GET">
+                <input type="search" name="query" placeholder="Введите название товара" value="<?php echo htmlspecialchars($_GET['query'] ?? ''); ?>">
+                <button type="submit">Поиск</button>
             </form>   
         </div>
 
