@@ -2,80 +2,22 @@
 session_start();
 
 require_once '../DB/start.php';
+require_once '../core/Controllers/PoductController.php';
 require_once '../core/Modules/PostModel.php';
-require_once '../core/Modules/UserModel.php';
 
 $conn = DB::getConnection();
-
-// Обработка избранного ДО любого вывода
-if (isset($_GET['action']) && $_GET['action'] === 'toggle_favourite' && isset($_SESSION['id'])) {
-    $product_id = (int)($_GET['product_id'] ?? 0);
-    
-    if ($product_id > 0) {
-        try {
-            // Проверяем наличие товара в избранном
-            $stmt = $conn->prepare("SELECT id FROM favourites WHERE user_id = ? AND product_id = ?");
-            $stmt->execute([$_SESSION['id'], $product_id]);
-            $favourite = $stmt->fetch();
-
-            if ($favourite) {
-                // Удаляем из избранного
-                $conn->prepare("DELETE FROM favourites WHERE id = ?")->execute([$favourite['id']]);
-            } else {
-                // Добавляем в избранное
-                $conn->prepare("INSERT INTO favourites (user_id, product_id) VALUES (?, ?)")
-                     ->execute([$_SESSION['id'], $product_id]);
-            }
-
-            // Редирект на предыдущую страницу с сохранением всех параметров
-            if (isset($_SERVER['HTTP_REFERER'])) {
-                $redirect_url = $_SERVER['HTTP_REFERER'];
-            } else {
-            // Если нет реферера, создаем URL на основе текущего контекста
-            if (isset($_GET['name'])) {
-                $redirect_url = './category.php?name=' . urlencode($_GET['name']);
-            } elseif (isset($_GET['block'])) {
-                $redirect_url = './categoryMore.php?block=' . urlencode($_GET['block']);
-            } else {
-                $redirect_url = '/index.php';
-            }
-            
-            // Добавляем параметры фильтрации если они есть
-            if (isset($_GET['min_value']) && isset($_GET['max_value'])) {
-                $redirect_url .= '&min_value=' . (int)$_GET['min_value'] . '&max_value=' . (int)$_GET['max_value'];
-            }
-        }
-
-        header("Location: " . $redirect_url);
-        exit;
-        } catch (PDOException $e) {
-            error_log("Ошибка: " . $e->getMessage());
-        }
-    }
-}
+$productController = new PoductController();
 
 // Получаем список избранных товаров
 $favourites = [];
 if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
-    try {
-        $stmt = $conn->prepare("SELECT product_id FROM favourites WHERE user_id = ?");
-        $stmt->execute([$_SESSION['id']]);
-        $favourites = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-    } catch (PDOException $e) {
-        error_log("Ошибка: " . $e->getMessage());
-    }
+    $favourites = $productController->getFavourites((int)$_SESSION['id']);
 }
 
 // Получаем список товаров в корзине
 $basketItems = [];
 if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
-    try {
-        $stmt = $conn->prepare("SELECT product_id FROM basket WHERE user_id = ?");
-        $stmt->execute([$_SESSION['id']]);
-        $basketItems = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-    } catch (PDOException $e) {
-        error_log("Ошибка корзины: " . $e->getMessage());
-    }
+    $basketItems = $productController->getBasketItemIds((int)$_SESSION['id']);
 }
 
 // Определяем, вызываем ли мы категорию или информационный блок
@@ -185,13 +127,13 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
                     <?php foreach($products as $product): ?>
                     <div class="card">
                         <div class="img_product">
-                            <a href="./pages/product.php?id=<?=$product['id']?>">
+                            <a href="./product.php?id=<?=$product['id']?>">
                                 <img src="../image/image_product/<?=htmlspecialchars($product['files'])?>" 
                                     alt="<?=htmlspecialchars($product['title'])?>">
                             </a>
                         </div>
                         <div class="price">
-                            <a href="./pages/product.php?id=<?=$product['id']?>">
+                            <a href="./product.php?id=<?=$product['id']?>">
                                 <h3><?=htmlspecialchars($product['title'])?></h3>
                             </a> 
                             <p><?=htmlspecialchars($product['price'])?> ₽</p>
@@ -201,11 +143,11 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
                                 <div class="bascet">
                                     <?php $inBasket = in_array($product['id'], $basketItems); ?>
                                     <?php if($inBasket): ?>
-                                        <a href="./pages/basket.php" class="in-basket">
+                                        <a href="./basket.php" class="in-basket">
                                             Товар в корзине
                                         </a>
                                     <?php else: ?>
-                                        <a href="../core/Controllers/PostController.php?action=AddToBasket&product_id=<?=$product['id']?>">
+                                        <a href="../core/Controllers/PoductController.php?action=AddToBasket&product_id=<?=$product['id']?>&query=<?=urlencode($_GET['query'] ?? '')?>&redirect_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
                                             В корзину
                                         </a>
                                     <?php endif; ?>
@@ -213,12 +155,12 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
                                 <div class="like">
                                     <?php $isFavourite = in_array($product['id'], $favourites); ?>
                                     <?php if (isset($_GET['name'])): ?>
-                                        <a href="./category.php?action=toggle_favourite&product_id=<?=$product['id']?>&name=<?=urlencode($categoryName)?><?=isset($_GET['min_value']) ? '&min_value='.(int)$_GET['min_value'] : ''?><?=isset($_GET['max_value']) ? '&max_value='.(int)$_GET['max_value'] : ''?>">
+                                        <a href="../core/Controllers/PoductController.php?action=toggle_favourite&product_id=<?=$product['id']?>&name=<?=urlencode($categoryName)?>&query=<?=urlencode($_GET['query'] ?? '')?><?=isset($_GET['min_value']) ? '&min_value='.(int)$_GET['min_value'] : ''?><?=isset($_GET['max_value']) ? '&max_value='.(int)$_GET['max_value'] : ''?>&redirect_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
                                             <img src="../image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
                                                 alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
                                         </a>
                                     <?php elseif (isset($_GET['block'])): ?>
-                                        <a href="./categoryMore.php?action=toggle_favourite&product_id=<?=$product['id']?>&block=<?=urlencode($blockDBName)?><?=isset($_GET['min_value']) ? '&min_value='.(int)$_GET['min_value'] : ''?><?=isset($_GET['max_value']) ? '&max_value='.(int)$_GET['max_value'] : ''?>">
+                                        <a href="../core/Controllers/PoductController.php?action=toggle_favourite&product_id=<?=$product['id']?>&block=<?=urlencode($blockDBName)?>&query=<?=urlencode($_GET['query'] ?? '')?><?=isset($_GET['min_value']) ? '&min_value='.(int)$_GET['min_value'] : ''?><?=isset($_GET['max_value']) ? '&max_value='.(int)$_GET['max_value'] : ''?>&redirect_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
                                             <img src="../image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
                                                 alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
                                         </a>

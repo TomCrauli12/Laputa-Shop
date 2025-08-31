@@ -2,63 +2,22 @@
 session_start();
 
 require_once '../DB/start.php';
-require_once '../core/Modules/PostModel.php';
-require_once '../core/Modules/UserModel.php';
+require_once '../core/Controllers/PoductController.php';
+require_once __DIR__ . '/../core/Modules/PostModel.php';
 
 $conn = DB::getConnection();
-
-// Обработка избранного ДО любого вывода
-if (isset($_GET['action']) && $_GET['action'] === 'toggle_favourite' && isset($_SESSION['id'])) {
-    $product_id = (int)($_GET['product_id'] ?? 0);
-    
-    if ($product_id > 0) {
-        try {
-            // Проверяем наличие товара в избранном
-            $stmt = $conn->prepare("SELECT id FROM favourites WHERE user_id = ? AND product_id = ?");
-            $stmt->execute([$_SESSION['id'], $product_id]);
-            $favourite = $stmt->fetch();
-
-            if ($favourite) {
-                // Удаляем из избранного
-                $conn->prepare("DELETE FROM favourites WHERE id = ?")->execute([$favourite['id']]);
-            } else {
-                // Добавляем в избранное
-                $conn->prepare("INSERT INTO favourites (user_id, product_id) VALUES (?, ?)")
-                     ->execute([$_SESSION['id'], $product_id]);
-            }
-
-            // Редирект на предыдущую страницу без параметров
-            $redirect_url = isset($_SERVER['HTTP_REFERER']) ? strtok($_SERVER['HTTP_REFERER'], '?') : '../index.php';
-            header("Location: " . $redirect_url);
-            exit;
-        } catch (PDOException $e) {
-            error_log("Ошибка: " . $e->getMessage());
-        }
-    }
-}
+$productController = new PoductController();
 
 // Получаем список избранных товаров
 $favourites = [];
 if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
-    try {
-        $stmt = $conn->prepare("SELECT product_id FROM favourites WHERE user_id = ?");
-        $stmt->execute([$_SESSION['id']]);
-        $favourites = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-    } catch (PDOException $e) {
-        error_log("Ошибка: " . $e->getMessage());
-    }
+    $favourites = $productController->getFavourites((int)$_SESSION['id']);
 }
 
 // Получаем список товаров в корзине
 $basketItems = [];
 if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
-    try {
-        $stmt = $conn->prepare("SELECT product_id FROM basket WHERE user_id = ?");
-        $stmt->execute([$_SESSION['id']]);
-        $basketItems = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-    } catch (PDOException $e) {
-        error_log("Ошибка корзины: " . $e->getMessage());
-    }
+    $basketItems = $productController->getBasketItemIds((int)$_SESSION['id']);
 }
 
 $product = products::showProduct($_GET['id']);
@@ -121,14 +80,14 @@ $inBasket = in_array($product['id'], $basketItems);
                                 Товар в корзине
                             </a>
                         <?php else: ?>
-                            <a href="../core/Controllers/PostController.php?action=AddToBasket&product_id=<?=$product['id']?>">
+                            <a href="../core/Controllers/PoductController.php?action=AddToBasket&product_id=<?=$product['id']?>&redirect_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
                                 В корзину
                             </a>
                         <?php endif; ?>
                     </div>
                     <div class="like">
                         <?php $isFavourite = in_array($product['id'], $favourites); ?>
-                        <a href="../index.php?action=toggle_favourite&product_id=<?=$product['id']?>">
+                        <a href="../core/Controllers/PoductController.php?action=toggle_favourite&product_id=<?=$product['id']?>&redirect_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
                             <img src="../image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
                                 alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
                         </a>

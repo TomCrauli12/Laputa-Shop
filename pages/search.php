@@ -2,83 +2,22 @@
 session_start();
 
 require_once '../DB/start.php';
-require_once '../core/Modules/UserModel.php';
-require_once '../core/Modules/PostModel.php';
+require_once '../core/Controllers/PoductController.php';
 
 $conn = DB::getConnection();
-
-if (isset($_GET['action']) && $_GET['action'] === 'toggle_favourite' && isset($_SESSION['id'])) {
-    $product_id = (int)($_GET['product_id'] ?? 0);
-    
-    if ($product_id > 0) {
-        try {
-            $stmt = $conn->prepare("SELECT id FROM favourites WHERE user_id = ? AND product_id = ?");
-            $stmt->execute([$_SESSION['id'], $product_id]);
-            $favourite = $stmt->fetch();
-
-            if ($favourite) {
-                $conn->prepare("DELETE FROM favourites WHERE id = ?")->execute([$favourite['id']]);
-            } else {
-                $conn->prepare("INSERT INTO favourites (user_id, product_id) VALUES (?, ?)")
-                     ->execute([$_SESSION['id'], $product_id]);
-            }
-
-            $redirect_query = http_build_query(['query' => $_GET['query']]);
-            header("Location: search.php?" . $redirect_query);
-            exit;
-        } catch (PDOException $e) {
-            error_log("Ошибка: " . $e->getMessage());
-        }
-    }
-}
-
-if (isset($_GET['action']) && $_GET['action'] === 'AddToBasket' && isset($_SESSION['id'])) {
-    $product_id = (int)($_GET['product_id'] ?? 0);
-
-    if ($product_id > 0) {
-        try {
-            $stmt = $conn->prepare("SELECT id FROM basket WHERE user_id = ? AND product_id = ?");
-            $stmt->execute([$_SESSION['id'], $product_id]);
-            $basket_item = $stmt->fetch();
-
-            if (!$basket_item) {
-                $conn->prepare("INSERT INTO basket (user_id, product_id, quantity) VALUES (?, ?, 1)")
-                     ->execute([$_SESSION['id'], $product_id]);
-            }
-
-            // Редирект на страницу поиска с тем же запросом
-            $redirect_query = http_build_query(['query' => $_GET['query']]);
-            header("Location: search.php?" . $redirect_query);
-            exit;
-        } catch (PDOException $e) {
-            error_log("Ошибка: " . $e->getMessage());
-        }
-    }
-}
+$productController = new PoductController();
 
 // --- БЛОК ПОЛУЧЕНИЯ ДАННЫХ ДЛЯ ВЫВОДА ---
 // Получаем список избранных товаров для текущего пользователя
 $favourites = [];
 if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
-    try {
-        $stmt = $conn->prepare("SELECT product_id FROM favourites WHERE user_id = ?");
-        $stmt->execute([$_SESSION['id']]);
-        $favourites = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-    } catch (PDOException $e) {
-        error_log("Ошибка: " . $e->getMessage());
-    }
+    $favourites = $productController->getFavourites((int)$_SESSION['id']);
 }
 
 // Получаем список товаров в корзине для текущего пользователя
 $basketItems = [];
 if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
-    try {
-        $stmt = $conn->prepare("SELECT product_id FROM basket WHERE user_id = ?");
-        $stmt->execute([$_SESSION['id']]);
-        $basketItems = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-    } catch (PDOException $e) {
-        error_log("Ошибка: " . $e->getMessage());
-    }
+    $basketItems = $productController->getBasketItemIds((int)$_SESSION['id']);
 }
 
 // --- ОСНОВНАЯ ЛОГИКА ПОИСКА ---
@@ -140,14 +79,14 @@ if (isset($_GET['query']) && !empty(trim($_GET['query']))) {
                                             Товар в корзине
                                         </a>
                                     <?php else : ?>
-                                        <a href="?action=AddToBasket&product_id=<?=$product['id']?>&query=<?=urlencode($_GET['query'])?>">
+                                        <a href="../core/Controllers/PoductController.php?action=AddToBasket&product_id=<?=$product['id']?>&query=<?=urlencode($_GET['query'])?>&redirect_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
                                             В корзину
                                         </a>
                                     <?php endif; ?>
                                 </div>
                                 <div class="like">
                                     <?php $isFavourite = in_array($product['id'], $favourites); ?>
-                                    <a href="?action=toggle_favourite&product_id=<?=$product['id']?>&query=<?=urlencode($_GET['query'])?>">
+                                    <a href="../core/Controllers/PoductController.php?action=toggle_favourite&product_id=<?=$product['id']?>&query=<?=urlencode($_GET['query'])?>&redirect_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
                                         <img src="../image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
                                             alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
                                     </a>
@@ -180,5 +119,8 @@ if (isset($_GET['query']) && !empty(trim($_GET['query']))) {
             <p>Введите название товара, чтобы начать поиск.</p>
         <?php endif; ?>
     </div>
+
+
+    <script src="../scripts/ajax.js"></script>
 </body>
 </html>

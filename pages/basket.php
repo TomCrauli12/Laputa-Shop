@@ -2,56 +2,33 @@
 session_start();
 
 require_once '../DB/start.php';
-require_once '../core/Modules/UserModel.php';
-require_once '../core/Modules/PostModel.php';
+require_once '../core/Controllers/PoductController.php';
 
 $conn = DB::getConnection();
+$productController = new PoductController();
 
 // Обработка избранного ДО любого вывода
-if (isset($_GET['action']) && $_GET['action'] === 'toggle_favourite' && isset($_SESSION['id'])) {
-    $product_id = (int)($_GET['product_id'] ?? 0);
-    
-    if ($product_id > 0) {
-        try {
-            // Проверяем наличие товара в избранном
-            $stmt = $conn->prepare("SELECT id FROM favourites WHERE user_id = ? AND product_id = ?");
-            $stmt->execute([$_SESSION['id'], $product_id]);
-            $favourite = $stmt->fetch();
-
-            if ($favourite) {
-                // Удаляем из избранного
-                $conn->prepare("DELETE FROM favourites WHERE id = ?")->execute([$favourite['id']]);
-            } else {
-                // Добавляем в избранное
-                $conn->prepare("INSERT INTO favourites (user_id, product_id) VALUES (?, ?)")
-                     ->execute([$_SESSION['id'], $product_id]);
-            }
-
-            // Редирект на предыдущую страницу без параметров
-            $redirect_url = isset($_SERVER['HTTP_REFERER']) ? strtok($_SERVER['HTTP_REFERER'], '?') : './basket.php';
-            header("Location: " . $redirect_url);
-            exit;
-        } catch (PDOException $e) {
-            error_log("Ошибка: " . $e->getMessage());
-        }
+// Логика обработки toggle_favourite будет перемещена в PoductController.php
+if (isset($_GET['action']) && isset($_SESSION['id'])) {
+    $action = $_GET['action'];
+    if ($action === 'toggle_favourite') {
+        // Это действие будет обрабатываться напрямую PoductController.php
+        // Этот блок будет пустым, так как контроллер сам обработает редирект
     }
+    // Если другие действия должны быть обработаны здесь, добавить их
 }
 
 // Получаем список избранных товаров
 $favourites = [];
 if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
-    try {
-        $stmt = $conn->prepare("SELECT product_id FROM favourites WHERE user_id = ?");
-        $stmt->execute([$_SESSION['id']]);
-        $favourites = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-    } catch (PDOException $e) {
-        error_log("Ошибка: " . $e->getMessage());
-    }
+    $favourites = $productController->getFavourites((int)$_SESSION['id']);
 }
 
-$query = $conn->prepare('select * from `basket` where user_id = ?');
-$query->execute([$_SESSION['id']]);
-$bascket = $query->fetchAll();
+// Получаем список товаров в корзине с деталями
+$basketItemsDetails = []; // Переименовываем $basket в $basketItemsDetails для ясности
+if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
+    $basketItemsDetails = $productController->getBasketItems((int)$_SESSION['id']);
+}
 
 ?>
 
@@ -70,41 +47,42 @@ $bascket = $query->fetchAll();
 
 
     <section class="basket_grid">
-        <?php if(empty($bascket)): ?>
+        <?php if(empty($basketItemsDetails)): ?>
             <div class="empty-basket">
                 <p>Ваша корзина пуста</p>
                 <a href="../index.php">Перейти к покупкам</a>
             </div>
         <?php else: ?>
-            <?php foreach($bascket as $key): ?>
+            <?php foreach($basketItemsDetails as $item): // Используем $item вместо $key ?>
             <?php
-                $query = $conn->prepare('select * from products where id = ?');
-                $query->execute([$key['product_id']]);
-                $products = $query->fetchAll();
+                // $query = $conn->prepare('select * from products where id = ?'); // Больше не нужно, так как детали продукта уже получены
+                // $query->execute([$item['product_id']]);
+                // $products = $query->fetchAll();
                 
-                $basket_id = $key['id'];
+                $basket_id = $item['basket_id']; // Используем basket_id из полученных данных
+                $product = $item; // Вся информация о продукте уже в $item
             ?>
-            <?php foreach($products as $key): ?>
+            <?php // foreach($products as $key): // Этот цикл больше не нужен ?>
             <div class="basket_card">
                 <div class="img_basket_product">
-                    <a href="./product.php?id=<?=$key['id']?>"><img src="../image/image_product/<?=$key['files']?>" alt="<?=htmlspecialchars($key['title'])?>"></a>
+                    <a href="./product.php?id=<?=$product['id']?>"><img src="../image/image_product/<?=$product['files']?>" alt="<?=htmlspecialchars($product['title'])?>"></a>
                 </div>
                 <div class="info_product">
                     <div class="price">
-                        <a href="./product.php?id=<?=$key['id']?>"><h1><?=htmlspecialchars($key['title'])?></h1></a> 
-                        <p><?=htmlspecialchars($key['price'])?> ₽</p>
+                        <a href="./product.php?id=<?=$product['id']?>"><h1><?=htmlspecialchars($product['title'])?></h1></a> 
+                        <p><?=htmlspecialchars($product['price'])?> ₽</p>
                     </div>
                     <div class="button">
                         <?php if(isset($_SESSION['login'])): ?>
                             <div class="like">
-                                <?php $isFavourite = in_array($key['id'], $favourites); ?>
-                                <a href="./basket.php?action=toggle_favourite&product_id=<?=$key['id']?>">
+                                <?php $isFavourite = in_array($product['id'], $favourites); ?>
+                                <a href="../core/Controllers/PoductController.php?action=toggle_favourite&product_id=<?=$product['id']?>&redirect_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
                                     <img src="../image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
                                          alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
                                 </a>
                             </div>
                             <div class="bascet">
-                                <a href="../core/Controllers/PostController.php?action=deleteBasketProduct&&id=<?=$basket_id?>" 
+                                <a href="../core/Controllers/PoductController.php?action=deleteBasketProduct&id=<?=$basket_id?>&redirect_url=<?=urlencode($_SERVER['REQUEST_URI'])?>" 
                                    onclick="return confirm('Удалить товар из корзины?')">Удалить из корзины</a>
                             </div>
                         <?php else: ?>
@@ -120,7 +98,7 @@ $bascket = $query->fetchAll();
                     </div>
                 </div>
             </div>
-            <?php endforeach; ?>
+            <?php // endforeach; // Этот цикл больше не нужен ?>
             <?php endforeach; ?>
         <?php endif; ?>
     </section>
