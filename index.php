@@ -74,9 +74,6 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
                 </label>
             </div>
             <a href="#"><img src="/Laputa-Shop/image/Image_system/icons8-vk-50.png" alt="Вконтакте"></a>
-            <div class="logo_contact">
-                <a href="/Laputa-Shop/index.php"><h1>Laputa</h1></a>
-            </div>
             <a href="#"><img src="/Laputa-Shop/image/Image_system/icons8-телеграм-50.png" alt="Телеграм"></a>
         </div>
     </nav>
