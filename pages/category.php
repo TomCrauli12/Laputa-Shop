@@ -108,17 +108,23 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
                                             Товар в корзине
                                         </a>
                                     <?php else: ?>
-                                        <a href="../core/Controllers/PoductController.php?action=AddToBasket&product_id=<?=$product['id']?>&query=<?=urlencode($_GET['query'] ?? '')?>&redirect_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
+                                        <button class="add-to-basket-btn" data-product-id="<?=$product['id']?>" 
+                                                data-redirect-url="<?=urlencode($_SERVER['REQUEST_URI'])?>">
                                             В корзину
-                                        </a>
+                                        </button>
                                     <?php endif; ?>
                                 </div>
                                 <div class="like">
                                     <?php $isFavourite = in_array($product['id'], $favourites); ?>
-                                    <a href="../core/Controllers/PoductController.php?action=toggle_favourite&product_id=<?=$product['id']?>&query=<?=urlencode($_GET['query'] ?? '')?>&redirect_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
+                                    <button class="toggle-favourite-btn" 
+                                            data-product-id="<?=$product['id']?>" 
+                                            data-category-name="<?=urlencode($categoryName)?>"
+                                            data-min-value="<?=isset($_GET['min_value']) ? (int)$_GET['min_value'] : ''?>"
+                                            data-max-value="<?=isset($_GET['max_value']) ? (int)$_GET['max_value'] : ''?>"
+                                            data-redirect-url="<?=urlencode($_SERVER['REQUEST_URI'])?>">
                                         <img src="../image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
                                             alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
-                                    </a>
+                                    </button>
                                 </div>
                             <?php else: ?>
                                 <div class="bascet">
@@ -150,6 +156,7 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
 
     <script src="../scripts/theme.js"></script>
     <script src="../scripts/script.js"></script>
+    <script src="../scripts/ajax.js"></script>
     <script>
         // Обработчик для кнопки каталога
         document.getElementById('catalog-link').addEventListener('click', function(e) {

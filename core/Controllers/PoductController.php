@@ -14,8 +14,8 @@ class PoductController
 
     public function handleRequest()
     {
-        if (isset($_GET['action'])) {
-            $action = $_GET['action'];
+        if (isset($_GET['action']) || (isset($_POST['action']) && $_SERVER['REQUEST_METHOD'] === 'POST')) {
+            $action = $_GET['action'] ?? $_POST['action'];
             switch ($action) {
                 case 'toggle_favourite':
                     $this->toggleFavourite();
@@ -39,61 +39,77 @@ class PoductController
 
     private function toggleFavourite()
     {
+        header('Content-Type: application/json');
         if (!isset($_SESSION['id'])) {
-            // Redirect to login or handle error
+            echo json_encode(['success' => false, 'message' => 'Пользователь не авторизован.']);
             return;
         }
 
-        $productId = (int)($_GET['product_id'] ?? 0);
+        $productId = (int)($_POST['product_id'] ?? 0);
         $userId = (int)$_SESSION['id'];
+        $isFavourite = false;
 
         if ($productId > 0) {
             try {
                 $this->productModel->toggleFavourite($userId, $productId);
+                // Check if it's now a favourite
+                $favourites = $this->productModel->getFavouritesByUserId($userId);
+                $isFavourite = in_array($productId, $favourites);
+                echo json_encode(['success' => true, 'message' => 'Статус избранного обновлен.', 'isFavourite' => $isFavourite]);
             } catch (PDOException $e) {
                 error_log("Ошибка: " . $e->getMessage());
+                echo json_encode(['success' => false, 'message' => 'Ошибка при обновлении статуса избранного.']);
             }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Неверный ID продукта.']);
         }
-        $this->redirectBack();
     }
 
     private function addToBasket()
     {
+        header('Content-Type: application/json');
         if (!isset($_SESSION['id'])) {
-            // Redirect to login or handle error
+            echo json_encode(['success' => false, 'message' => 'Пользователь не авторизован.']);
             return;
         }
 
-        $productId = (int)($_GET['product_id'] ?? 0);
+        $productId = (int)($_POST['product_id'] ?? 0);
         $userId = (int)$_SESSION['id'];
 
         if ($productId > 0) {
             try {
                 $this->productModel->addToBasket($userId, $productId);
+                echo json_encode(['success' => true, 'message' => 'Товар добавлен в корзину.']);
             } catch (PDOException $e) {
                 error_log("Ошибка: " . $e->getMessage());
+                echo json_encode(['success' => false, 'message' => 'Ошибка при добавлении товара в корзину.']);
             }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Неверный ID продукта.']);
         }
-        $this->redirectBack();
     }
 
     private function deleteBasketProduct()
     {
+        header('Content-Type: application/json');
         if (!isset($_SESSION['id'])) {
-            // Redirect to login or handle error
+            echo json_encode(['success' => false, 'message' => 'Пользователь не авторизован.']);
             return;
         }
 
-        $basketId = (int)($_GET['id'] ?? 0);
+        $basketId = (int)($_POST['id'] ?? 0);
 
         if ($basketId > 0) {
             try {
                 $this->productModel->deleteBasketItem($basketId);
+                echo json_encode(['success' => true, 'message' => 'Товар удален из корзины.']);
             } catch (PDOException $e) {
                 error_log("Ошибка deleteBasketProduct в ProductController: " . $e->getMessage());
+                echo json_encode(['success' => false, 'message' => 'Ошибка при удалении товара из корзины.']);
             }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Неверный ID корзины.']);
         }
-        $this->redirectBack();
     }
 
     private function redirectBack()
@@ -101,7 +117,10 @@ class PoductController
         if (isset($_GET['redirect_url']) && !empty($_GET['redirect_url'])) {
             header("Location: " . $_GET['redirect_url']);
             exit;
-        } else {
+        } elseif (isset($_POST['redirect_url']) && !empty($_POST['redirect_url'])) {
+            header("Location: " . $_POST['redirect_url']);
+            exit;
+        }else {
             $redirect_query = http_build_query(['query' => $_GET['query'] ?? '']);
             header("Location: ../pages/search.php?" . $redirect_query);
             exit;

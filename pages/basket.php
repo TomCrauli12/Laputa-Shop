@@ -76,14 +76,19 @@ if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
                         <?php if(isset($_SESSION['login'])): ?>
                             <div class="like">
                                 <?php $isFavourite = in_array($product['id'], $favourites); ?>
-                                <a href="../core/Controllers/PoductController.php?action=toggle_favourite&product_id=<?=$product['id']?>&redirect_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
+                                <button class="toggle-favourite-btn" 
+                                        data-product-id="<?=$product['id']?>" 
+                                        data-redirect-url="<?=urlencode($_SERVER['REQUEST_URI'])?>">
                                     <img src="../image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
                                          alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
-                                </a>
+                                </button>
                             </div>
                             <div class="bascet">
-                                <a href="../core/Controllers/PoductController.php?action=deleteBasketProduct&id=<?=$basket_id?>&redirect_url=<?=urlencode($_SERVER['REQUEST_URI'])?>" 
-                                   onclick="return confirm('Удалить товар из корзины?')">Удалить из корзины</a>
+                                <button class="delete-from-basket-btn" 
+                                        data-basket-id="<?=$basket_id?>" 
+                                        data-redirect-url="<?=urlencode($_SERVER['REQUEST_URI'])?>">
+                                    Удалить из корзины
+                                </button>
                             </div>
                         <?php else: ?>
                             <div class="like">
@@ -109,6 +114,7 @@ if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
 
     <script src="../scripts/theme.js"></script>
     <script src="../scripts/script.js"></script>
+    <script src="../scripts/ajax.js"></script>
     <script>
         // Обработчик для кнопки каталога
         document.getElementById('catalog-link').addEventListener('click', function(e) {

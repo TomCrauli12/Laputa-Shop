@@ -79,17 +79,20 @@ if (isset($_GET['query']) && !empty(trim($_GET['query']))) {
                                             Товар в корзине
                                         </a>
                                     <?php else : ?>
-                                        <a href="../core/Controllers/PoductController.php?action=AddToBasket&product_id=<?=$product['id']?>&query=<?=urlencode($_GET['query'])?>&redirect_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
+                                        <button class="add-to-basket-btn" data-product-id="<?=$product['id']?>" 
+                                                data-redirect-url="<?=urlencode($_SERVER['REQUEST_URI'])?>">
                                             В корзину
-                                        </a>
+                                        </button>
                                     <?php endif; ?>
                                 </div>
                                 <div class="like">
                                     <?php $isFavourite = in_array($product['id'], $favourites); ?>
-                                    <a href="../core/Controllers/PoductController.php?action=toggle_favourite&product_id=<?=$product['id']?>&query=<?=urlencode($_GET['query'])?>&redirect_url=<?=urlencode($_SERVER['REQUEST_URI'])?>">
+                                    <button class="toggle-favourite-btn" 
+                                            data-product-id="<?=$product['id']?>" 
+                                            data-redirect-url="<?=urlencode($_SERVER['REQUEST_URI'])?>">
                                         <img src="../image/Image_system/icons8-heart-50<?=$isFavourite ? ' (1)' : ''?>.png" 
                                             alt="<?=$isFavourite ? 'Удалить из избранного' : 'В избранное'?>">
-                                    </a>
+                                    </button>
                                 </div>
                             <?php else : ?>
                                 <div class="bascet">
