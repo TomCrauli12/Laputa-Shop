@@ -12,7 +12,7 @@ require_once '../core/Modules/UserModel.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style/Refund.css">
-    <link rel="stylesheet" href="../style/medea.css">
+    <link rel="stylesheet" href="../style/media/medea.css">
     <title>Laputa | Возврат и обмен</title>
 </head>
 <body>

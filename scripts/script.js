@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let currentIndex = 0;
     let intervalId;
-    const SLIDE_INTERVAL = 5000; // Уменьшил интервал до 5 сек (было 10)
-    const TRANSITION_DURATION = 300; // Добавил константу для длительности анимации
+    const SLIDE_INTERVAL = 5000; 
+    const TRANSITION_DURATION = 300; 
 
     function initSlider() {
         slides[currentIndex].classList.add('active');

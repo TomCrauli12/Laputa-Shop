@@ -11,14 +11,14 @@
         display: none;
     }
     footer{
-        position: absolute;
+        display: none;
         width: 100%;
         bottom: 0;
         height: 80px;
         position: fixed;
     }
     .footer{
-        display: flex;
+        display: none;
         justify-content: space-between;
         background-color: rgb(255, 255, 255);
         border-top: 1px solid #d9d9d9;
@@ -120,12 +120,12 @@
     }
     .slider{
         padding: 0px 20px;
-        height: 25%;
+        height: 35%;
     }
 }
 @media (min-width: 1400px){
     footer{
-        
+        display: none;
     }
     .logo_contact{
         display: none;
@@ -134,7 +134,7 @@
 @media (min-width: 1px) and (max-width: 600px) {
     .slider{
         padding: 0px 20px;
-        height: 15%;
+        height: 55%;
     }
     .conteiner_zero{
         height: 80px;
@@ -146,6 +146,7 @@
         padding: 8px 20px;
     }
     .footer {
+        display: none;
         padding: 10px 20px;
     }
     .slide{

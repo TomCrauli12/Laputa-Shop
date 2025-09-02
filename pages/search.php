@@ -43,6 +43,7 @@ if (isset($_GET['query']) && !empty(trim($_GET['query']))) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="../style/media/medea.css">
     <title>Поиск товаров</title>
 </head>
 <body>

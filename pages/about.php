@@ -16,7 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style/static.css">
     <link rel="stylesheet" href="../style/about.css">
-    <link rel="stylesheet" href="../style/medea.css">
+    <link rel="stylesheet" href="../style/media/medea.css">
     <title>Laputa | О нас</title>
 </head>
 <body>

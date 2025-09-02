@@ -49,6 +49,7 @@ $category = $conn->query('SELECT * FROM category')->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/Laputa-Shop/style/static.css">
     <link rel="stylesheet" href="/Laputa-Shop/style/style.css">
+    <link rel="stylesheet" href="./style/media/medea.css">
     <title>Laputa | Главная</title>
 </head>
 <body>

@@ -34,7 +34,7 @@ if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style/static.css">
     <link rel="stylesheet" href="../style/style.css">
-    <link rel="stylesheet" href="../style/medea.css">
+    <link rel="stylesheet" href="../style/media/medea.css">
     <title>Laputa | Избранное</title>
 </head>
 <body>

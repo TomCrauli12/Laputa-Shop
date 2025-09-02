@@ -12,8 +12,7 @@ $productController = new PoductController();
 if (isset($_GET['action']) && isset($_SESSION['id'])) {
     $action = $_GET['action'];
     if ($action === 'toggle_favourite') {
-        // Это действие будет обрабатываться напрямую PoductController.php
-        // Этот блок будет пустым, так как контроллер сам обработает редирект
+
     }
     // Если другие действия должны быть обработаны здесь, добавить их
 }
@@ -39,7 +38,7 @@ if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style/static.css">
     <link rel="stylesheet" href="../style/basket.css">
-    <link rel="stylesheet" href="../style/medea.css">
+    <link rel="stylesheet" href="../style/media/medea.css">
     <title>Laputa | Корзина</title>
 </head>
 <body>
@@ -62,7 +61,7 @@ if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
                 $basket_id = $item['basket_id']; // Используем basket_id из полученных данных
                 $product = $item; // Вся информация о продукте уже в $item
             ?>
-            <?php // foreach($products as $key): // Этот цикл больше не нужен ?>
+            <?php ?>
             <div class="basket_card">
                 <div class="img_basket_product">
                     <a href="./product.php?id=<?=$product['id']?>"><img src="../image/image_product/<?=$product['files']?>" alt="<?=htmlspecialchars($product['title'])?>"></a>
@@ -103,7 +102,7 @@ if (isset($_SESSION['login']) && isset($_SESSION['id'])) {
                     </div>
                 </div>
             </div>
-            <?php // endforeach; // Этот цикл больше не нужен ?>
+            <?php ?>
             <?php endforeach; ?>
         <?php endif; ?>
     </section>

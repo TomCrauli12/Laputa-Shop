@@ -95,6 +95,7 @@ $allCategories = $conn->query('SELECT * FROM category')->fetchAll();
     <link rel="stylesheet" href="../style/static.css">
     <link rel="stylesheet" href="../style/product_grid.css">
     <link rel="stylesheet" href="../style/product_card.css">
+    <link rel="stylesheet" href="../style/media/medea.css">
     <title>Laputa | <?=htmlspecialchars($pageTitle)?></title>
 </head>
 <body>

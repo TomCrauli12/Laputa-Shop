@@ -2,8 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.getElementById('theme-toggle-checkbox');
     const html = document.documentElement;
     const themeTexts = document.querySelectorAll('.theme-switcher__text');
-    
-    // Инициализация темы
+
     const savedTheme = localStorage.getItem('theme') || 'light';
     html.setAttribute('data-theme', savedTheme);
     
@@ -11,10 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
         themeToggle.checked = true;
     }
     
-    // Обновляем текст
     updateThemeText(savedTheme);
     
-    // Обработчик клика
     themeToggle.addEventListener('change', toggleTheme);
     
     function toggleTheme() {

@@ -4,13 +4,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const mainImageLink = mainImages.querySelector('a');
     const mainImage = mainImages.querySelector('img');
     
-    // Сохраняем оригинальное основное изображение
     const originalMainImage = {
         src: mainImage.src,
         alt: mainImage.alt
     };
-    
-    // Обработчик клика для миниатюр
+
     imagesList.addEventListener('click', function(e) {
         if (e.target.tagName === 'IMG') {
             e.preventDefault();
@@ -18,22 +16,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Обработчик клика для основного изображения
+
     mainImageLink.addEventListener('click', function(e) {
         e.preventDefault();
         returnToGallery();
     });
-    
-    // Функция обмена изображениями
     function swapImages(clickedThumbnail) {
         const thumbnailImg = clickedThumbnail.querySelector('img');
         const mainImg = mainImage;
         
-        // Сохраняем текущие значения
         const tempSrc = mainImg.src;
         const tempAlt = mainImg.alt;
         
-        // Меняем местами
         mainImg.src = thumbnailImg.src;
         mainImg.alt = thumbnailImg.alt;
         
@@ -41,13 +35,10 @@ document.addEventListener('DOMContentLoaded', function() {
         thumbnailImg.alt = tempAlt;
     }
     
-    // Функция возврата изображения в галерею
     function returnToGallery() {
-        // Находим первый свободный слот в images_list
         const thumbnails = imagesList.querySelectorAll('a');
         let emptySlot = null;
         
-        // Проверяем, есть ли уже такое изображение в галерее
         const currentMainSrc = mainImage.src;
         let alreadyInGallery = false;
         
@@ -58,11 +49,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         if (alreadyInGallery) {
-            // Если изображение уже в галерее, просто возвращаем оригинал
             mainImage.src = originalMainImage.src;
             mainImage.alt = originalMainImage.alt;
         } else {
-            // Ищем пустой слот (изображение с оригинальным путем)
             thumbnails.forEach(thumbnail => {
                 const thumbImg = thumbnail.querySelector('img');
                 if (thumbImg.src === originalMainImage.src && !emptySlot) {
@@ -71,7 +60,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             if (emptySlot) {
-                // Меняем местами с пустым слотом
                 const emptySlotImg = emptySlot.querySelector('img');
                 const tempSrc = emptySlotImg.src;
                 const tempAlt = emptySlotImg.alt;
@@ -85,7 +73,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Добавляем стили для визуального выделения
     const style = document.createElement('style');
     style.textContent = `
         .images_list a {

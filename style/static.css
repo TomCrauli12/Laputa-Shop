@@ -1,6 +1,3 @@
-/* ===== ОБНОВЛЕННЫЙ STATIC.CSS - ТОЛЬКО УНИКАЛЬНЫЕ СТИЛИ ===== */
-
-/* Базовые стили - только если их нет в других файлах */
 * {
     padding: 0;
     margin: 0;
@@ -23,9 +20,7 @@ p, h1, h2, h3, h4, h5 {
     color: var(--text-color);
 }
 
-/* Переменные для тем - централизованные */
 :root {
-    /* Светлая тема (по умолчанию) */
     --bg-color: #ffffff;
     --text-color: #000000;
     --header-bg: rgba(168, 168, 168, 0.274);
@@ -39,7 +34,6 @@ p, h1, h2, h3, h4, h5 {
 }
 
 [data-theme="dark"] {
-    /* Темная тема */
     --bg-color: #121212;
     --text-color: #e0e0e0;
     --header-bg: #1e1e1e;
@@ -52,7 +46,6 @@ p, h1, h2, h3, h4, h5 {
     --icon-filter: invert(1);
 }
 
-/* Уникальные стили для шапки */
 .sean {
     display: flex;
     justify-content: center;
@@ -100,7 +93,6 @@ p, h1, h2, h3, h4, h5 {
     white-space: nowrap;
 }
 
-/* Уникальные стили для навигации */
 .navbar, header {
     display: flex;
     justify-content: space-between;
@@ -140,7 +132,6 @@ p, h1, h2, h3, h4, h5 {
     filter: var(--icon-filter);
 }
 
-/* Бургер-меню */
 .burger-checkbox {
     position: relative;
     display: flex;
@@ -203,7 +194,6 @@ p, h1, h2, h3, h4, h5 {
     top: 0;
 }
 
-/* Меню категорий */
 .info-block {
     display: none;
     position: fixed;
@@ -237,7 +227,6 @@ p, h1, h2, h3, h4, h5 {
     padding: 5px 10px;
 }
 
-/* Переключатель тем */
 .theme-switcher {
     display: flex;
     align-items: center;
@@ -303,7 +292,7 @@ p, h1, h2, h3, h4, h5 {
     background-color: #4d9fec;
 }
 
-/* Контакт */
+
 .contact {
     display: flex;
 }
